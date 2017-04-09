@@ -31,7 +31,9 @@ public class Token {
 
         Token token = (Token) o;
 
-        if (value != null ? !value.equals(token.value) : token.value != null) return false;
+        if (value != null ? !value.equals(token.value) : token.value != null) {
+            return false;
+        }
         return category == token.category;
     }
 
