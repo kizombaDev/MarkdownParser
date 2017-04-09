@@ -15,5 +15,4 @@ addons:
       secure: $SONAR_TOKEN 
 notifications:
   email: false
-script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+script: travis.sh
