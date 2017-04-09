@@ -2,7 +2,7 @@
 set -euo pipefail
 
 
-configureTravis
+#configureTravis
 
 case "$TARGET" in
 
@@ -40,16 +40,16 @@ BUILD)
   elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
     echo 'Build and analyze internal pull request'
 
-    mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar \
-        $MAVEN_ARGS \
-        -Dsource.skip=true \
-        -Pdeploy-sonarsource \
-        -Dsonar.analysis.mode=preview \
-        -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
-        -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
-        -Dsonar.github.oauth=$GITHUB_TOKEN \
-        -Dsonar.host.url=$SONAR_HOST_URL \
-        -Dsonar.login=$SONAR_TOKEN
+    mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar #\
+    #    $MAVEN_ARGS \
+     #   -Dsource.skip=true \
+      #  -Pdeploy-sonarsource \
+       # -Dsonar.analysis.mode=preview \
+       # -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
+       # -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
+       # -Dsonar.github.oauth=$GITHUB_TOKEN \
+       # -Dsonar.host.url=$SONAR_HOST_URL \
+       # -Dsonar.login=$SONAR_TOKEN
 
   else
     echo 'Build feature branch or external pull request'
