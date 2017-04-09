@@ -1,14 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-  # Hack to keep job alive even if no logs during more than 10 minutes.
-  # That can occur when uploading sonarqube.zip to Artifactory.
-  ./clock.sh &
-
-  # installJdk8
-  # installMaven
-  # fixBuildVersion
-
   # Minimal Maven settings
   export MAVEN_OPTS="-Xmx1G -Xms128m"
   MAVEN_ARGS="-Dmaven.test.redirectTestOutputToFile=false -Dsurefire.useFile=false -B -e -V "
@@ -30,7 +22,7 @@ set -euo pipefail
 
     mvn package $MAVEN_ARGS 
 
-  elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
+  elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo 'Build and analyze internal pull request'
 
     mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar #\
@@ -49,6 +41,3 @@ set -euo pipefail
 
     mvn install $MAVEN_ARGS -Dsource.skip=true
   fi
-
-#stop the clock
-touch stop
