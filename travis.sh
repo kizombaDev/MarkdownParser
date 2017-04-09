@@ -20,7 +20,7 @@ set -euo pipefail
   elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo 'Build and analyze internal pull request'
 
-    mvn org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar #\
+    mvn org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar \
         $MAVEN_ARGS \
         -Dsource.skip=true \
         -Dsonar.analysis.mode=preview \
