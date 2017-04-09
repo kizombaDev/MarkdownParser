@@ -18,7 +18,8 @@ set -euo pipefail
     mvn org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar \
           $MAVEN_ARGS \
           -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN         
+          -Dsonar.login=$SONAR_TOKEN \
+          -Dsonar.organization=kizombadev-github
 
   elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo 'Build and analyze internal pull request'
