@@ -17,11 +17,6 @@ set -euo pipefail
          
     mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
-  elif [[ "$TRAVIS_BRANCH" == "branch-"* ]] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    echo 'Build release branch'
-
-    mvn package $MAVEN_ARGS 
-
   elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo 'Build and analyze internal pull request'
 
