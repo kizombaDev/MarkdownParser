@@ -1,6 +1,9 @@
 package org.kizombadev.markdownparser;
 
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 public class InputStream {
     private String content;
     private int index = 0;
@@ -10,9 +13,7 @@ public class InputStream {
     }
 
     public static InputStream create(String content) {
-        if (content == null) {
-            throw new IllegalStateException();
-        }
+        checkNotNull(content);
 
         InputStream result = new InputStream();
         result.content = content;
@@ -30,10 +31,7 @@ public class InputStream {
     }
 
     public char showNext() {
-        if (!hasNext()) {
-            throw new IllegalStateException();
-        }
-
+        checkState(hasNext());
         return content.charAt(index);
     }
 

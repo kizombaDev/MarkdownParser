@@ -1,7 +1,13 @@
 package org.kizombadev.markdownparser;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Tokenizer {
     private List<Token> tokens = new ArrayList<>();
@@ -12,7 +18,9 @@ public class Tokenizer {
         return new Tokenizer();
     }
 
-    public List<Token> parse(String input) {
+    public ImmutableCollection<Token> parse(String input) {
+        checkNotNull(input);
+
         InputStream tokenStream = InputStream.create(input);
 
         while (tokenStream.hasNext()) {
@@ -47,7 +55,7 @@ public class Tokenizer {
         handleEndOfText();
 
 
-        return tokens;
+        return ImmutableList.copyOf(tokens);
     }
 
     private void handleEndOfText() {
@@ -57,7 +65,7 @@ public class Tokenizer {
 
         String currentText = text.toString().trim();
 
-        if (null == currentText || "".equals(currentText)) {
+        if (Strings.isNullOrEmpty(currentText)) {
             return;
         }
 

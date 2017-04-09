@@ -51,6 +51,6 @@ public class TokenTest {
     @Test
     public void testToString() {
         Token tokenFoo = Token.createText("foo");
-        assertThat(tokenFoo.toString()).isEqualTo("Token{value=\'foo\', category=TEXT}");
+        assertThat(tokenFoo.toString()).isEqualTo("Token{value=foo, category=TEXT}");
     }
 }

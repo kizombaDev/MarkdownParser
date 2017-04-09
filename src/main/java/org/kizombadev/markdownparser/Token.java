@@ -1,6 +1,12 @@
 package org.kizombadev.markdownparser;
 
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class Token {
     private String value;
     private Category category;
@@ -9,18 +15,14 @@ public class Token {
     }
 
     public static Token create(Category type) {
-
-        if (type == Category.TEXT) {
-            //todo better exception
-            throw new IllegalStateException();
-        }
+        checkArgument(type != Category.TEXT, "Please use the method createText if you want create a text token");
 
         return create(type, null);
     }
 
     public static Token createText(String value) {
+        checkNotNull(value);
         return create(Category.TEXT, value);
-
     }
 
     private static Token create(Category type, String value) {
@@ -41,25 +43,20 @@ public class Token {
 
         Token token = (Token) o;
 
-        if (value != null ? !value.equals(token.value) : token.value != null) {
-            return false;
-        }
-        return category == token.category;
+        return Objects.equal(value, token.value) && Objects.equal(category, token.category);
     }
 
     @Override
     public int hashCode() {
-        int result = value != null ? value.hashCode() : 0;
-        result = 31 * result + (category != null ? category.hashCode() : 0);
-        return result;
+        return Objects.hashCode(value, category);
     }
 
     @Override
     public String toString() {
-        return "Token{" +
-                "value='" + value + '\'' +
-                ", category=" + category +
-                '}';
+        return MoreObjects.toStringHelper(this)
+                .add("value", value)
+                .add("category", category)
+                .toString();
     }
 
     public String getValue() {
