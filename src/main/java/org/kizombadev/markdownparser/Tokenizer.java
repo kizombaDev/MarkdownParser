@@ -30,6 +30,9 @@ public class Tokenizer {
                 handleEndOfText();
                 tokens.add(Token.create(Token.Category.NEW_LINE));
                 tokenStream.next();
+            } else if (tokenStream.current() == '\n') {
+                handleEndOfText();
+                tokens.add(Token.create(Token.Category.NEW_LINE));
             } else if (tokenStream.current() == '#' && tokenStream.hasNext() && tokenStream.showNext() == '#') {
                 handleEndOfText();
                 tokens.add(Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
@@ -53,7 +56,6 @@ public class Tokenizer {
         }
 
         handleEndOfText();
-
 
         return ImmutableList.copyOf(tokens);
     }

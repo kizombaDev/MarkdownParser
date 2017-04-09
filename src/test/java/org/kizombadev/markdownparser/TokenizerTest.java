@@ -2,14 +2,13 @@ package org.kizombadev.markdownparser;
 
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class TokenizerTest {
     private Tokenizer underTest;
-    private String newLine = System.getProperty("line.separator");
+    private String newLine = System.lineSeparator();
 
     @Before
     public void Init() {
@@ -41,16 +40,12 @@ public class TokenizerTest {
         assertThat(underTest.parse("**")).containsOnly(Token.create(Token.Category.DOUBLE_STAR));
     }
 
-    //todo fix linux junit test
     @Test
-    @Ignore
     public void TestMethod6() {
         assertThat(underTest.parse(newLine)).containsOnly(Token.create(Token.Category.NEW_LINE));
     }
 
-    //todo fix linux junit test
     @Test
-    @Ignore
     public void TestMethod7() {
         assertThat(underTest.parse(newLine + newLine)).containsSequence(Token.create(Token.Category.NEW_LINE), Token.create(Token.Category.NEW_LINE));
     }
