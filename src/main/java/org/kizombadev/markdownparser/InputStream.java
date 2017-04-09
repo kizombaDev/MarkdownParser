@@ -30,13 +30,11 @@ public class InputStream {
     }
 
     public char showNext() {
-        if (hasNext() == false) {
+        if (!hasNext()) {
             throw new IllegalStateException();
         }
 
-        char result = content.charAt(index);
-
-        return result;
+        return content.charAt(index);
     }
 
     public boolean hasNext() {

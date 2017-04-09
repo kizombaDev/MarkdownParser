@@ -21,8 +21,13 @@ public class Token {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Token token = (Token) o;
 
@@ -62,12 +67,12 @@ public class Token {
     }
 
     public enum Category {
-        Star,
-        Text,
-        DoubleNumberSign,
-        DoupleStar,
-        NumberSign,
-        NewLine,
-        GreaterThanSign
+        STAR,
+        TEXT,
+        DOUBLE_NUMBER_SIGN,
+        DOUPLE_STAR,
+        NUMBER_SIGN,
+        NEW_LINE,
+        GREATER_THAN_SIGN
     }
 }

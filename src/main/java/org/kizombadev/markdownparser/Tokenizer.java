@@ -20,25 +20,25 @@ public class Tokenizer {
 
             if (tokenStream.current() == '\r' && tokenStream.hasNext() && tokenStream.showNext() == '\n') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NewLine));
+                tokens.add(Token.create(Token.Category.NEW_LINE));
                 tokenStream.next();
             } else if (tokenStream.current() == '#' && tokenStream.hasNext() && tokenStream.showNext() == '#') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DoubleNumberSign));
+                tokens.add(Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
                 tokenStream.next();
             } else if (tokenStream.current() == '#') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NumberSign));
+                tokens.add(Token.create(Token.Category.NUMBER_SIGN));
             } else if (tokenStream.current() == '*' && tokenStream.hasNext() && tokenStream.showNext() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DoupleStar));
+                tokens.add(Token.create(Token.Category.DOUPLE_STAR));
                 tokenStream.next();
             } else if (tokenStream.current() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.Star));
+                tokens.add(Token.create(Token.Category.STAR));
             } else if (tokenStream.current() == '>') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.GreaterThanSign));
+                tokens.add(Token.create(Token.Category.GREATER_THAN_SIGN));
             } else {
                 text.append(tokenStream.current());
             }
@@ -55,7 +55,13 @@ public class Tokenizer {
             return;
         }
 
-        tokens.add(Token.create(Token.Category.Text, text.toString().trim()));
+        String currentText = text.toString().trim();
+
+        if (null == currentText || "".equals(currentText)) {
+            return;
+        }
+
+        tokens.add(Token.create(Token.Category.TEXT, currentText));
         text = new StringBuilder();
     }
 }

@@ -17,47 +17,47 @@ public class TokenizerTest {
 
     @Test
     public void TestMethod1() {
-        assertThat(underTest.parse("#")).containsOnly(Token.create(Token.Category.NumberSign));
+        assertThat(underTest.parse("#")).containsOnly(Token.create(Token.Category.NUMBER_SIGN));
     }
 
     @Test
     public void TestMethod2() {
-        assertThat(underTest.parse("##")).containsOnly(Token.create(Token.Category.DoubleNumberSign));
+        assertThat(underTest.parse("##")).containsOnly(Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
     }
 
     @Test
     public void TestMethod3() {
-        assertThat(underTest.parse("# ##")).containsSequence(Token.create(Token.Category.NumberSign), Token.create(Token.Category.DoubleNumberSign));
+        assertThat(underTest.parse("# ##")).containsSequence(Token.create(Token.Category.NUMBER_SIGN), Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
     }
 
     @Test
     public void TestMethod4() {
-        assertThat(underTest.parse("*")).containsOnly(Token.create(Token.Category.Star));
+        assertThat(underTest.parse("*")).containsOnly(Token.create(Token.Category.STAR));
     }
 
     @Test
     public void TestMethod5() {
-        assertThat(underTest.parse("**")).containsOnly(Token.create(Token.Category.DoupleStar));
+        assertThat(underTest.parse("**")).containsOnly(Token.create(Token.Category.DOUPLE_STAR));
     }
 
     @Test
     public void TestMethod6() {
-        assertThat(underTest.parse(newLine)).containsOnly(Token.create(Token.Category.NewLine));
+        assertThat(underTest.parse(newLine)).containsOnly(Token.create(Token.Category.NEW_LINE));
     }
 
     @Test
     public void TestMethod7() {
-        assertThat(underTest.parse(newLine + newLine)).containsSequence(Token.create(Token.Category.NewLine), Token.create(Token.Category.NewLine));
+        assertThat(underTest.parse(newLine + newLine)).containsSequence(Token.create(Token.Category.NEW_LINE), Token.create(Token.Category.NEW_LINE));
     }
 
     @Test
     public void TestMethod8() {
-        assertThat(underTest.parse(">")).containsOnly(Token.create(Token.Category.GreaterThanSign));
+        assertThat(underTest.parse(">")).containsOnly(Token.create(Token.Category.GREATER_THAN_SIGN));
     }
 
     @Test
     public void TestMethod9() {
-        assertThat(underTest.parse("42")).containsOnly(Token.create(Token.Category.Text, "42"));
+        assertThat(underTest.parse("42")).containsOnly(Token.create(Token.Category.TEXT, "42"));
     }
 
 
