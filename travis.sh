@@ -14,8 +14,11 @@ set -euo pipefail
     # if there are not enough commits in the Git repository (even if Travis executed git clone --depth 50).
     # For this reason errors are ignored with "|| true"
     git fetch --unshallow || true
-         
-    mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+ 
+    mvn org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar \
+          $MAVEN_ARGS \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN         
 
   elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo 'Build and analyze internal pull request'
