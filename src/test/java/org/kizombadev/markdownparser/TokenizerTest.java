@@ -38,7 +38,7 @@ public class TokenizerTest {
 
     @Test
     public void TestMethod5() {
-        assertThat(underTest.parse("**")).containsOnly(Token.create(Token.Category.DOUPLE_STAR));
+        assertThat(underTest.parse("**")).containsOnly(Token.create(Token.Category.DOUBLE_STAR));
     }
 
     //todo fix linux junit test
@@ -62,7 +62,7 @@ public class TokenizerTest {
 
     @Test
     public void TestMethod9() {
-        assertThat(underTest.parse("42")).containsOnly(Token.create(Token.Category.TEXT, "42"));
+        assertThat(underTest.parse("42")).containsOnly(Token.createText("42"));
     }
 
 

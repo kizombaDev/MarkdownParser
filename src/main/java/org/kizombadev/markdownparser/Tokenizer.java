@@ -31,7 +31,7 @@ public class Tokenizer {
                 tokens.add(Token.create(Token.Category.NUMBER_SIGN));
             } else if (tokenStream.current() == '*' && tokenStream.hasNext() && tokenStream.showNext() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DOUPLE_STAR));
+                tokens.add(Token.create(Token.Category.DOUBLE_STAR));
                 tokenStream.next();
             } else if (tokenStream.current() == '*') {
                 handleEndOfText();
@@ -61,7 +61,7 @@ public class Tokenizer {
             return;
         }
 
-        tokens.add(Token.create(Token.Category.TEXT, currentText));
+        tokens.add(Token.createText(currentText));
         text = new StringBuilder();
     }
 }

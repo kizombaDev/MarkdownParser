@@ -9,16 +9,26 @@ public class Token {
     }
 
     public static Token create(Category type) {
+
+        if (type == Category.TEXT) {
+            //todo better exception
+            throw new IllegalStateException();
+        }
+
         return create(type, null);
     }
 
-    public static Token create(Category type, String value) {
+    public static Token createText(String value) {
+        return create(Category.TEXT, value);
+
+    }
+
+    private static Token create(Category type, String value) {
         Token result = new Token();
         result.value = value;
         result.category = type;
         return result;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -56,23 +66,15 @@ public class Token {
         return value;
     }
 
-    public void setValue() {
-        this.value = value;
-    }
-
     public Category getCategory() {
         return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public enum Category {
         STAR,
         TEXT,
         DOUBLE_NUMBER_SIGN,
-        DOUPLE_STAR,
+        DOUBLE_STAR,
         NUMBER_SIGN,
         NEW_LINE,
         GREATER_THAN_SIGN
