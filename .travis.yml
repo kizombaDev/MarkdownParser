@@ -12,11 +12,11 @@ cache:
     - $HOME/.sonar
     - $HOME/jvm
     - $HOME/maven
-addons:
-  sonarqube:
-    organization: "kizombadev-github" 
-    token:
-      secure: $SONAR_TOKEN 
+#addons:
+#  sonarqube:
+#    organization: "kizombadev-github" 
+#    token:
+#      secure: $SONAR_TOKEN 
 notifications:
   email: false
 before_script:
