@@ -28,7 +28,6 @@ set -euo pipefail
     mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar #\
         $MAVEN_ARGS \
         -Dsource.skip=true \
-        -Pdeploy-sonarsource \
         -Dsonar.analysis.mode=preview \
         -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
         -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
