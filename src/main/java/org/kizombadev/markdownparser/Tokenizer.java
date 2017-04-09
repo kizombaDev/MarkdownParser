@@ -65,7 +65,7 @@ public class Tokenizer {
             return;
         }
 
-        String currentText = text.toString().trim();
+        String currentText = text.toString();
 
         if (Strings.isNullOrEmpty(currentText)) {
             return;

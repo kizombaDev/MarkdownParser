@@ -31,6 +31,7 @@ public class Token {
         result.category = type;
         return result;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
