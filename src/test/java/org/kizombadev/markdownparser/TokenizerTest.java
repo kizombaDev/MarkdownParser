@@ -32,7 +32,7 @@ public class TokenizerTest {
 
     @Test
     public void TestMethod3() {
-        assertThat(underTest.parse("# ##")).containsSequence(Token.create(Token.Category.NUMBER_SIGN), Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
+        assertThat(underTest.parse("# ##")).containsSequence(Token.create(Token.Category.NUMBER_SIGN), Token.createText(" "), Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
     }
 
     @Test
