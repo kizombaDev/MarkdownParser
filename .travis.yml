@@ -15,4 +15,4 @@ addons:
       secure: $SONAR_TOKEN 
 notifications:
   email: false
-script: travis.sh
+script: ./travis.sh
