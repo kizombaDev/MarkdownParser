@@ -3,7 +3,7 @@ dist: trusty
 sudo: false
 addons:
   sonarqube:
-    organization: "kizombaDev" 
+    organization: "kizombadev-github" 
     token:
       secure: $SONAR_TOKEN 
 script:
