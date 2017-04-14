@@ -116,7 +116,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void testUnorderedListWihtTwoItems() {
+    public void testUnorderedListWithTwoItems() {
         ImmutableSyntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.NewLine, Token.Star, Token.Blank, Token.createTextToken("Bar")));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(UnorderedListSyntax.class);

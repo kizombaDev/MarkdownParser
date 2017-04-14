@@ -27,14 +27,14 @@ import org.kizombadev.markdownparser.entities.*;
 import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 
-//todo make the sytaxTree Immutable
+//todo make the syntaxTree Immutable
 
 public class SyntaxAnalyzer {
 
     private ImmutableList<Token> tokens;
     private int tokenIndex = 0;
-    private boolean isBoldModusActive = false;
-    private boolean isItalicModusEnabled = false;
+    private boolean isBoldModeActive = false;
+    private boolean isItalicModeEnabled = false;
 
     @NotNull
     public static SyntaxAnalyzer create() {
@@ -48,22 +48,21 @@ public class SyntaxAnalyzer {
 
         Token currentToken = currentToken();
 
-
         while (currentToken != null) {
 
-            if (currentToken.equals(Token.NumberSign)) {
+            if (Token.NumberSign.equals(currentToken)) {
                 handleBigHeadlineLine(root);
-            } else if (currentToken.equals(Token.DoubleNumberSign)) {
+            } else if (Token.DoubleNumberSign.equals(currentToken)) {
                 handleSmallHeadlineLine(root);
-            } else if (currentToken.equals(Token.GreaterThanSign)) {
+            } else if (Token.GreaterThanSign.equals(currentToken)) {
                 handleQuotation(root);
-            } else if (currentToken.equals(Token.DoubleStar)) {
+            } else if (Token.DoubleStar.equals(currentToken)) {
                 handleBold(root);
-            } else if (currentToken.equals(Token.Star) && nextToken() == Token.Blank) {
+            } else if (Token.Star.equals(currentToken) && Token.Blank.equals(nextToken())) {
                 handleUnorderedList(root);
-            } else if (currentToken.equals(Token.Star)) {
+            } else if (Token.Star.equals(currentToken)) {
                 handleItalic(root);
-            } else if (currentToken.equals(Token.NewLine)) {
+            } else if (Token.NewLine.equals(currentToken)) {
                 stepTokenForward();
             }
 
@@ -76,13 +75,13 @@ public class SyntaxAnalyzer {
     private void handleUnorderedList(MutableSyntax currentRoot) {
         MutableSyntax unorderedList = new UnorderedListSyntax();
 
-        while (currentToken() == Token.Star && nextToken() == Token.Blank) {
+        while (Token.Star.equals(currentToken()) && Token.Blank.equals(nextToken())) {
             stepTokenForward();
             stepTokenForward();
 
             handleUnorderedListItem(unorderedList);
 
-            if (currentToken() == Token.NewLine) {
+            if (Token.NewLine.equals(currentToken())) {
                 stepTokenForward();
             }
         }
@@ -127,13 +126,12 @@ public class SyntaxAnalyzer {
 
         while (currentToken != null && !currentToken.equals(Token.NewLine)) {
 
-            if (currentToken.equals(Token.DoubleStar) && isBoldModusActive) {
-                break;
-            } else if (currentToken.equals(Token.DoubleStar)) {
+            if (Token.DoubleStar.equals(currentToken) && isBoldModeActive ||
+                    Token.Star.equals(currentToken) && isItalicModeEnabled) {
+                return;
+            } else if (Token.DoubleStar.equals(currentToken)) {
                 handleBold(currentRoot);
-            } else if (currentToken.equals(Token.Star) && isItalicModusEnabled) {
-                break;
-            } else if (currentToken.equals(Token.Star)) {
+            } else if (Token.Star.equals(currentToken)) {
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
                 currentRoot.addChild(new TextSyntax(currentToken.getTextValue()));
@@ -145,22 +143,23 @@ public class SyntaxAnalyzer {
     }
 
     private void handleBold(MutableSyntax currentRoot) {
-        isBoldModusActive = true;
-        handleBeginEndToken(State.BOLD_BEGIN, State.BOLD_END, new BoldSyntax(), currentRoot);
-        isBoldModusActive = false;
-    }
-
-    private void handleItalic(MutableSyntax currentRoot) {
-        isItalicModusEnabled = true;
-        handleBeginEndToken(State.ITALIC_BEGIN, State.ITALIC_END, new ItalicSyntax(), currentRoot);
-        isItalicModusEnabled = false;
-    }
-
-    private void handleBeginEndToken(State beginSate, State endState, MutableSyntax newSyntaxElement, MutableSyntax currentRoot) {
+        isBoldModeActive = true;
         stepTokenForward();
+        MutableSyntax newSyntaxElement = new BoldSyntax();
         handleLineContainer(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);
+        isBoldModeActive = false;
+    }
+
+    private void handleItalic(MutableSyntax currentRoot) {
+        isItalicModeEnabled = true;
+        stepTokenForward();
+        MutableSyntax newSyntaxElement = new ItalicSyntax();
+        handleLineContainer(newSyntaxElement);
+        stepTokenForward();
+        currentRoot.addChild(newSyntaxElement);
+        isItalicModeEnabled = false;
     }
 
     @Nullable
@@ -181,9 +180,5 @@ public class SyntaxAnalyzer {
 
     private void stepTokenForward() {
         tokenIndex++;
-    }
-
-    private enum State {
-        BOLD_BEGIN, BOLD_END, ITALIC_BEGIN, ITALIC_END,
     }
 }

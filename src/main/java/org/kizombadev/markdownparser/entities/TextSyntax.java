@@ -22,7 +22,7 @@ package org.kizombadev.markdownparser.entities;
 
 public class TextSyntax extends Syntax {
 
-    private String text;
+    private final String text;
 
     public TextSyntax(String text) {
         this.text = text;

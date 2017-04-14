@@ -33,8 +33,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class LexicalAnalyzerTest {
     @Rule
     public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
+    private final String newLine = System.lineSeparator();
     private LexicalAnalyzer underTest;
-    private String newLine = System.lineSeparator();
 
     @Before
     public void Init() {
@@ -117,6 +117,7 @@ public class LexicalAnalyzerTest {
                 Token.DoubleStar);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void test() {
         String markdown = "#h1-Uberschrift\n" +

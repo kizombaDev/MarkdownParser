@@ -31,7 +31,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class Syntax implements MutableSyntax {
-    private List<ImmutableSyntax> children = new ArrayList<>();
+    private final List<ImmutableSyntax> children = new ArrayList<>();
 
     public ImmutableList<ImmutableSyntax> getChildren() {
         return ImmutableList.copyOf(children);

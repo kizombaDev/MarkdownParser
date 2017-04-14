@@ -32,7 +32,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class LexicalAnalyzer {
-    private List<Token> tokens = new ArrayList<>();
+    private final List<Token> tokens = new ArrayList<>();
 
     private StringBuilder text = new StringBuilder();
 

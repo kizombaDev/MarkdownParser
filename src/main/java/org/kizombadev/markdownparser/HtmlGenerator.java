@@ -65,8 +65,14 @@ public class HtmlGenerator {
     }
 
     private void handleTag(String htmlTag, ImmutableSyntax child, StringBuilder html) {
-        html.append("<" + htmlTag + ">");
+        html.append("<");
+        html.append(htmlTag);
+        html.append(">");
+
         handle(child, html);
-        html.append("</" + htmlTag + ">");
+
+        html.append("</");
+        html.append(htmlTag);
+        html.append(">");
     }
 }

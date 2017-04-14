@@ -23,17 +23,32 @@ package org.kizombadev.markdownparser.entities;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jetbrains.annotations.NotNull;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Token {
+
+    @NotNull
     public static final Token Star = create(Category.STAR);
+
+    @NotNull
     public static final Token DoubleStar = create(Category.DOUBLE_STAR);
+
+    @NotNull
     public static final Token NumberSign = create(Category.NUMBER_SIGN);
+
+    @NotNull
     public static final Token DoubleNumberSign = create(Category.DOUBLE_NUMBER_SIGN);
+
+    @NotNull
     public static final Token NewLine = create(Category.NEW_LINE);
+
+    @NotNull
     public static final Token GreaterThanSign = create(Category.GREATER_THAN_SIGN);
+
+    @NotNull
     public static final Token Blank = create(Category.BLANK);
 
     private String value;
