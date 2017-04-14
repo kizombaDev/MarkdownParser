@@ -48,7 +48,7 @@ public class TokenTest {
     public void testTextToken() {
         Token underTest = Token.createTextToken("foo");
         assertThat(underTest.isTextToken()).isTrue();
-        assertThat(underTest.getValue()).isEqualTo("foo");
+        assertThat(underTest.getTextValue()).isEqualTo("foo");
     }
 
     @Test

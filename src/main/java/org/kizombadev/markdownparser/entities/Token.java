@@ -65,16 +65,12 @@ public class Token {
                 .toString();
     }
 
-    public String getValue() {
+    public String getTextValue() {
         return value;
     }
 
     public boolean isTextToken() {
         return category == Category.TEXT;
-    }
-
-    private Category getCategory() {
-        return category;
     }
 
     private enum Category {

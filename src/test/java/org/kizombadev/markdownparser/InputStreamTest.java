@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class InputStreamTest {
 
     @Test
-    public void Test1() {
+    public void testEmptyInput() {
         final InputStream tokenStream = InputStream.create("");
 
         assertThat(tokenStream.hasNext()).isFalse();
@@ -18,7 +18,7 @@ public class InputStreamTest {
     }
 
     @Test
-    public void Test2() {
+    public void testOneCharacterInput() {
         InputStream tokenStream = InputStream.create("a");
 
         assertThat(tokenStream.hasNext()).isTrue();
@@ -31,7 +31,7 @@ public class InputStreamTest {
     }
 
     @Test
-    public void Test3() {
+    public void testLargeInput() {
         InputStream tokenStream = InputStream.create("abc");
         assertThat(tokenStream.next()).isEqualTo('a');
         assertThat(tokenStream.next()).isEqualTo('b');
