@@ -18,10 +18,31 @@
  *
  */
 
-package org.kizombadev.markdownparser.exceptions;
+package org.kizombadev.markdownparser;
 
-public class UnknownSyntaxTypeException extends MarkdownParserException {
-    public UnknownSyntaxTypeException(String message) {
-        super(message);
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
+public class ApplicationTest {
+    @Test
+    @Ignore
+    public void test() {
+        PrintStream out = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setErr(printStream);
+
+        new Application().execute(null);
+
+        String console = new String(outputStream.toByteArray());
+
+        assertThat(console).isNotEmpty();
+
+        System.setOut(out);
     }
 }

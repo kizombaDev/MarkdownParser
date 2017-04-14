@@ -22,6 +22,7 @@ package org.kizombadev.markdownparser.exceptions;
 
 public class MarkdownParserException extends RuntimeException {
     public MarkdownParserException() {
+        //nothing to do
     }
 
     public MarkdownParserException(String message) {
@@ -30,13 +31,5 @@ public class MarkdownParserException extends RuntimeException {
 
     public MarkdownParserException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public MarkdownParserException(Throwable cause) {
-        super(cause);
-    }
-
-    public MarkdownParserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

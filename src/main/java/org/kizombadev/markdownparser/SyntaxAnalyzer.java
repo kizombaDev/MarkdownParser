@@ -28,8 +28,6 @@ import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.Token;
 import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 
-//todo make the syntaxTree Immutable
-
 public class SyntaxAnalyzer {
 
     private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
@@ -37,7 +35,7 @@ public class SyntaxAnalyzer {
     private int tokenIndex = 0;
     private boolean isBoldModeActive = false;
     private boolean isItalicModeEnabled = false;
-    private int blankCounter = 0;
+    private boolean shouldInsertBlank = false;
     private int infinityLoopCounter = 0;
 
     @NotNull
@@ -64,7 +62,7 @@ public class SyntaxAnalyzer {
                 handleUnorderedList(root);
             } else if (Token.NewLine.equals(currentToken)) {
                 stepTokenForward();
-                blankCounter = 0;
+                shouldInsertBlank = false;
             } else {
                 handleParagraph(root);
             }
@@ -77,7 +75,7 @@ public class SyntaxAnalyzer {
         return root;
     }
 
-    private void handleLineContainer(Syntax currentRoot) {
+    private void handleLine(Syntax currentRoot) {
         skipBlanks();
 
         Token currentToken = currentToken();
@@ -88,21 +86,31 @@ public class SyntaxAnalyzer {
                     (Token.Star.equals(currentToken) && isItalicModeEnabled)) {
                 return;
             } else if (Token.DoubleStar.equals(currentToken)) {
+                handleBlank(currentRoot);
                 handleBold(currentRoot);
             } else if (Token.Star.equals(currentToken)) {
+                handleBlank(currentRoot);
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
-                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, addBlanks() + currentToken.getTextValue()));
+                handleBlank(currentRoot);
+                currentRoot.addChild(Syntax.createTextSyntax(currentToken.getTextValue()));
                 stepTokenForward();
             } else if (Token.Blank.equals(currentToken)) {
                 stepTokenForward();
-                blankCounter++;
+                shouldInsertBlank = true;
             }
 
             checkInfinityLoop();
 
             currentToken = currentToken();
         }
+    }
+
+    private void handleBlank(Syntax currentRoot) {
+        if (shouldInsertBlank) {
+            currentRoot.addChild(Syntax.createTextSyntax(" "));
+        }
+        shouldInsertBlank = false;
     }
 
     private void checkInfinityLoop() {
@@ -122,22 +130,9 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private String addBlanks() {
-
-        StringBuilder blanks = new StringBuilder();
-
-        for (int i = 0; i < blankCounter; i++) {
-            blanks.append(" ");
-        }
-
-        blankCounter = 0;
-
-        return blanks.toString();
-    }
-
     private void handleParagraph(Syntax root) {
         Syntax paragraph = Syntax.create(SyntaxType.PARAGRAPH);
-        handleLineContainer(paragraph);
+        handleLine(paragraph);
         root.addChild(paragraph);
     }
 
@@ -152,6 +147,7 @@ public class SyntaxAnalyzer {
 
             if (Token.NewLine.equals(currentToken())) {
                 stepTokenForward();
+                shouldInsertBlank = false;
             }
         }
 
@@ -160,7 +156,7 @@ public class SyntaxAnalyzer {
 
     private void handleUnorderedListItem(Syntax unorderedList) {
         Syntax unorderedListItem = Syntax.create(SyntaxType.UNORDERED_LIST_ITEM);
-        handleLineContainer(unorderedListItem);
+        handleLine(unorderedListItem);
         unorderedList.addChild(unorderedListItem);
     }
 
@@ -168,7 +164,7 @@ public class SyntaxAnalyzer {
         Syntax quotation = Syntax.create(SyntaxType.QUOTATION);
         stepTokenForward();
 
-        handleLineContainer(quotation);
+        handleLine(quotation);
         currentRoot.addChild(quotation);
     }
 
@@ -176,7 +172,7 @@ public class SyntaxAnalyzer {
         Syntax bigHeadline = Syntax.create(SyntaxType.BIG_HEADLINE);
         stepTokenForward();
 
-        handleLineContainer(bigHeadline);
+        handleLine(bigHeadline);
         currentRoot.addChild(bigHeadline);
     }
 
@@ -185,7 +181,7 @@ public class SyntaxAnalyzer {
         stepTokenForward();
 
 
-        handleLineContainer(smallHeadline);
+        handleLine(smallHeadline);
         currentRoot.addChild(smallHeadline);
     }
 
@@ -193,7 +189,7 @@ public class SyntaxAnalyzer {
         isBoldModeActive = true;
         stepTokenForward();
         Syntax newSyntaxElement = Syntax.create(SyntaxType.BOLD);
-        handleLineContainer(newSyntaxElement);
+        handleLine(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);
         isBoldModeActive = false;
@@ -203,7 +199,7 @@ public class SyntaxAnalyzer {
         isItalicModeEnabled = true;
         stepTokenForward();
         Syntax newSyntaxElement = Syntax.create(SyntaxType.ITALIC);
-        handleLineContainer(newSyntaxElement);
+        handleLine(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);
         isItalicModeEnabled = false;
