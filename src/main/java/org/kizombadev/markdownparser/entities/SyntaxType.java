@@ -20,6 +20,6 @@
 
 package org.kizombadev.markdownparser.entities;
 
-
-public class BoldSyntax extends Syntax {
+public enum SyntaxType {
+    Text, Root, BigHeadline, Bold, Quotation, SmallHeadline, UnorderedList, Italic, UnorderdListItem
 }

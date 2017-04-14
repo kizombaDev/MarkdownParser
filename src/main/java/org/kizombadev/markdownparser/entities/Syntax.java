@@ -22,16 +22,48 @@ package org.kizombadev.markdownparser.entities;
 
 
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class Syntax implements MutableSyntax {
+public class Syntax implements MutableSyntax {
     private final List<ImmutableSyntax> children = new ArrayList<>();
+    private String content = null;
+    private SyntaxType type;
+
+    @NotNull
+    public static Syntax createWithChildren(SyntaxType type, ImmutableSyntax... children) {
+        checkNotNull(type);
+
+        Syntax syntax = new Syntax();
+        if (children != null) {
+            Arrays.stream(children).forEach(s -> syntax.addChild(s));
+        }
+        syntax.type = type;
+        return syntax;
+    }
+
+    @NotNull
+    public static Syntax createWithContent(SyntaxType type, String content) {
+        checkNotNull(type);
+
+        Syntax syntax = new Syntax();
+        syntax.content = content;
+        syntax.type = type;
+        return syntax;
+    }
+
+    @NotNull
+    public static Syntax create(SyntaxType type) {
+        return createWithChildren(type, null);
+    }
 
     public ImmutableList<ImmutableSyntax> getChildren() {
         return ImmutableList.copyOf(children);
@@ -44,5 +76,15 @@ public abstract class Syntax implements MutableSyntax {
 
     public <T extends ImmutableSyntax> T convertTo(Class<T> type) {
         return (T) this;
+    }
+
+    @Nullable
+    public String getContent() {
+        return content;
+    }
+
+    @NotNull
+    public SyntaxType getType() {
+        return type;
     }
 }

@@ -20,7 +20,8 @@
 
 package org.kizombadev.markdownparser;
 
-import org.kizombadev.markdownparser.entities.*;
+import org.jetbrains.annotations.NotNull;
+import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 
 public class HtmlGenerator {
@@ -31,6 +32,7 @@ public class HtmlGenerator {
     private HtmlGenerator() {
     }
 
+    @NotNull
     public static HtmlGenerator create() {
         return new HtmlGenerator();
     }
@@ -48,17 +50,17 @@ public class HtmlGenerator {
 
     private void handle(ImmutableSyntax root, StringBuilder html) {
         for (ImmutableSyntax child : root.getChildren()) {
-            if (child instanceof BigHeadline) {
+            if (SyntaxType.BigHeadline.equals(child.getType())) {
                 handleTag("h1", child, html);
-            } else if (child instanceof SmallHeadline) {
+            } else if (SyntaxType.SmallHeadline.equals(child.getType())) {
                 handleTag("h2", child, html);
-            } else if (child instanceof TextSyntax) {
-                html.append(child.convertTo(TextSyntax.class).getText());
-            } else if (child instanceof BoldSyntax) {
+            } else if (SyntaxType.Text.equals(child.getType())) {
+                html.append(child.getContent());
+            } else if (SyntaxType.Bold.equals(child.getType())) {
                 handleTag("b", child, html);
-            } else if (child instanceof ItalicSyntax) {
+            } else if (SyntaxType.Italic.equals(child.getType())) {
                 handleTag("i", child, html);
-            } else if (child instanceof QuotationSyntax) {
+            } else if (SyntaxType.Quotation.equals(child.getType())) {
                 handleTag("blockquote", child, html);
             }
         }

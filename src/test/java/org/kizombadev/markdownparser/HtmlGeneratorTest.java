@@ -22,8 +22,8 @@ package org.kizombadev.markdownparser;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kizombadev.markdownparser.entities.*;
-import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
+import org.kizombadev.markdownparser.entities.Syntax;
+import org.kizombadev.markdownparser.entities.SyntaxType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,34 +39,32 @@ public class HtmlGeneratorTest {
 
     @Test
     public void testBigHeadline() {
-        assertElementWithOneTextChild(new BigHeadline(), "h1");
+        assertElementWithOneTextChild(SyntaxType.BigHeadline, "h1");
     }
 
     @Test
     public void testSmallHeadline() {
-        assertElementWithOneTextChild(new SmallHeadline(), "h2");
+        assertElementWithOneTextChild(SyntaxType.SmallHeadline, "h2");
     }
 
     @Test
     public void testItalic() {
-        assertElementWithOneTextChild(new ItalicSyntax(), "i");
+        assertElementWithOneTextChild(SyntaxType.Italic, "i");
     }
 
     @Test
     public void testBold() {
-        assertElementWithOneTextChild(new BoldSyntax(), "b");
+        assertElementWithOneTextChild(SyntaxType.Bold, "b");
     }
 
     @Test
     public void testQuotation() {
-        assertElementWithOneTextChild(new QuotationSyntax(), "blockquote");
+        assertElementWithOneTextChild(SyntaxType.Quotation, "blockquote");
     }
 
-    private void assertElementWithOneTextChild(MutableSyntax syntax, String htmlTag) {
+    private void assertElementWithOneTextChild(SyntaxType type, String htmlTag) {
         //arrange
-        syntax.addChild(new TextSyntax("Foo"));
-        RootSyntax root = new RootSyntax();
-        root.addChild(syntax);
+        Syntax root = Syntax.createWithChildren(SyntaxType.Root, Syntax.createWithChildren(type, Syntax.createWithContent(SyntaxType.Text, "Foo")));
 
         //act
         String html = generator.parse(root);

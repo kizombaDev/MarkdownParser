@@ -22,9 +22,20 @@ package org.kizombadev.markdownparser.entities.interfaces;
 
 
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.kizombadev.markdownparser.entities.SyntaxType;
 
 public interface ImmutableSyntax {
     ImmutableList<ImmutableSyntax> getChildren();
 
     <T extends ImmutableSyntax> T convertTo(Class<T> type);
+
+    @Nullable
+    String getContent();
+
+    @NotNull
+    SyntaxType getType();
+
+
 }
