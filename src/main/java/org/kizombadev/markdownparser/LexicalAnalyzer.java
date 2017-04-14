@@ -3,19 +3,20 @@ package org.kizombadev.markdownparser;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import org.kizombadev.markdownparser.entities.Token;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Tokenizer {
+public class LexicalAnalyzer {
     private List<Token> tokens = new ArrayList<>();
 
     private StringBuilder text = new StringBuilder();
 
-    public static Tokenizer create() {
-        return new Tokenizer();
+    public static LexicalAnalyzer create() {
+        return new LexicalAnalyzer();
     }
 
     public ImmutableCollection<Token> parse(String input) {
@@ -28,28 +29,28 @@ public class Tokenizer {
 
             if (tokenStream.current() == '\r' && tokenStream.hasNext() && tokenStream.showNext() == '\n') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NEW_LINE));
+                tokens.add(Token.NewLine);
                 tokenStream.next();
             } else if (tokenStream.current() == '\n') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NEW_LINE));
+                tokens.add(Token.NewLine);
             } else if (tokenStream.current() == '#' && tokenStream.hasNext() && tokenStream.showNext() == '#') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
+                tokens.add(Token.DoubleNumberSign);
                 tokenStream.next();
             } else if (tokenStream.current() == '#') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NUMBER_SIGN));
+                tokens.add(Token.NumberSign);
             } else if (tokenStream.current() == '*' && tokenStream.hasNext() && tokenStream.showNext() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DOUBLE_STAR));
+                tokens.add(Token.DoubleStar);
                 tokenStream.next();
             } else if (tokenStream.current() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.STAR));
+                tokens.add(Token.Star);
             } else if (tokenStream.current() == '>') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.GREATER_THAN_SIGN));
+                tokens.add(Token.GreaterThanSign);
             } else {
                 text.append(tokenStream.current());
             }
@@ -71,7 +72,7 @@ public class Tokenizer {
             return;
         }
 
-        tokens.add(Token.createText(currentText));
+        tokens.add(Token.createTextToken(currentText));
         text = new StringBuilder();
     }
 }
