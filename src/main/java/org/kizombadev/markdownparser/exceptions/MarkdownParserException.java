@@ -22,6 +22,7 @@ package org.kizombadev.markdownparser.exceptions;
 
 public class MarkdownParserException extends RuntimeException {
     public MarkdownParserException() {
+        //nothing to do
     }
 
     public MarkdownParserException(String message) {

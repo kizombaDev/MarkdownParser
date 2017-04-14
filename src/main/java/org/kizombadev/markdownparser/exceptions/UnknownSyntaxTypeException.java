@@ -22,6 +22,7 @@ package org.kizombadev.markdownparser.exceptions;
 
 public class UnknownSyntaxTypeException extends MarkdownParserException {
     public UnknownSyntaxTypeException() {
+        //nothing to do
     }
 
     public UnknownSyntaxTypeException(String message) {
