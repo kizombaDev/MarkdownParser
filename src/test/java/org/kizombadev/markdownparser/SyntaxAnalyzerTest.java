@@ -42,172 +42,125 @@ public class SyntaxAnalyzerTest {
     @Test
     public void testNumberSignText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BIG_HEADLINE);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.BIG_HEADLINE, "Foo");
     }
 
     @Test
     public void testDoubleNumberSignText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleNumberSign, Token.createTextToken("Foo")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.SMALL_HEADLINE);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.SMALL_HEADLINE, "Foo");
     }
 
     @Test
     public void testDoubleNumberSignBlankText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleNumberSign, Token.Blank, Token.createTextToken("Foo")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.SMALL_HEADLINE);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.SMALL_HEADLINE, "Foo");
     }
 
     @Test
     public void testNumberSignTextNewLineDoubleNumberSingText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo"), Token.NewLine, Token.DoubleNumberSign, Token.createTextToken("Bar")));
-        assertThat(syntax.getChildren()).hasSize(2);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BIG_HEADLINE);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(syntax.getChildren().get(1)).isSyntaxTypeOf(SyntaxType.SMALL_HEADLINE);
-        assertThat(syntax.getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
-
+        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.BIG_HEADLINE, "Foo");
+        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.SMALL_HEADLINE, "Bar");
     }
 
     @Test
     public void testNumberSignTextDoubleStartTextDoubleStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo"), Token.DoubleStar, Token.createTextToken("Bar"), Token.DoubleStar));
         assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BIG_HEADLINE);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(syntax.getChildren().get(0).getChildren().get(1)).isSyntaxTypeOf(SyntaxType.BOLD);
-        assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.BIG_HEADLINE, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondContainerAndFirstText(SyntaxType.BIG_HEADLINE, SyntaxType.BOLD, "Bar");
     }
 
     @Test
     public void testGreaterThanSignText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.GreaterThanSign, Token.createTextToken("Foo")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.QUOTATION);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.QUOTATION, "Foo");
     }
 
     @Test
     public void testDoubleStarTextDoubleStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, SyntaxType.BOLD, "Foo");
     }
 
     @Test
     public void testStarTextStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.createTextToken("Foo"), Token.Star));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.ITALIC);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, SyntaxType.ITALIC, "Foo");
     }
 
     @Test
     public void testUnorderedListWithOneItem() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.NewLine));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.UNORDERED_LIST, SyntaxType.UNORDERED_LIST_ITEM, "Foo");
     }
 
     @Test
     public void testUnorderedListWithTwoItems() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.NewLine, Token.Star, Token.Blank, Token.createTextToken("Bar")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(syntax.getChildren().get(0).getChildren().get(1)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
-        assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.UNORDERED_LIST, SyntaxType.UNORDERED_LIST_ITEM, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondContainerAndFirstText(SyntaxType.UNORDERED_LIST, SyntaxType.UNORDERED_LIST_ITEM, "Bar");
     }
 
     @Test
     public void testText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
     }
 
     @Test
     public void testTextBlankBlankNewLineText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.Blank, Token.Blank, Token.NewLine, Token.createTextToken("Bar")));
-        assertThat(syntax.getChildren()).hasSize(2);
-        Syntax paragraph = syntax.getChildren().get(0);
-        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(paragraph.getChildren()).hasSize(1);
-        assertThat(paragraph.getChildren().get(0)).isTextElementWith("Foo");
-
-        paragraph = syntax.getChildren().get(1);
-        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(paragraph.getChildren()).hasSize(1);
-        assertThat(paragraph.getChildren().get(0)).isTextElementWith("Bar");
+        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.PARAGRAPH, "Bar");
     }
 
     @Test
     public void test() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar, Token.Blank, Token.createTextToken("Bar")));
-        assertThat(syntax.getChildren()).hasSize(1);
-
-        Syntax paragraph = syntax.getChildren().get(0);
-        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(paragraph.getChildren()).hasSize(3);
-
-        assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
-        assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" ");
-        assertThat(paragraph.getChildren().get(2)).isTextElementWith("Bar");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, SyntaxType.BOLD, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Bar");
     }
+
 
     @Test
     public void testBlankBetweenBoldAndItalicBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar, Token.Blank, Token.Star, Token.createTextToken("Bar"), Token.Star));
-        assertThat(syntax.getChildren()).hasSize(1);
-
-        Syntax paragraph = syntax.getChildren().get(0);
-        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(paragraph.getChildren()).hasSize(3);
-
-        assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
-        assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-
-        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" ");
-
-        assertThat(paragraph.getChildren().get(2)).isSyntaxTypeOf(SyntaxType.ITALIC);
-        assertThat(paragraph.getChildren().get(2).getChildren().get(0)).isTextElementWith("Bar");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, SyntaxType.BOLD, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndThirdContainerAndFirstText(SyntaxType.PARAGRAPH, SyntaxType.ITALIC, "Bar");
     }
 
     @Test
     public void testBlankInUnorderedListBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.Blank, Token.NewLine, Token.Star, Token.Blank, Token.createTextToken("Bar")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(syntax.getChildren().get(0).getChildren().get(1)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
-        assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType.UNORDERED_LIST, SyntaxType.UNORDERED_LIST_ITEM, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondContainerAndFirstText(SyntaxType.UNORDERED_LIST, SyntaxType.UNORDERED_LIST_ITEM, "Bar");
     }
 
     @Test
-    public void testMutliBlanksBug() {
+    public void testMultiBlanksBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.Blank, Token.Blank, Token.createTextToken("Bar")));
-        assertThat(syntax.getChildren()).hasSize(1);
-        Syntax paragraph = syntax.getChildren().get(0);
-        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(paragraph.getChildren()).hasSize(3);
-        assertThat(paragraph.getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" ");
-        assertThat(paragraph.getChildren().get(2)).isTextElementWith("Bar");
-
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Bar");
     }
 
     @Test
@@ -231,5 +184,4 @@ public class SyntaxAnalyzerTest {
 
     //todo multi line
     //todo zweit zitate nacheinander
-    //remove mulit blanks
 }

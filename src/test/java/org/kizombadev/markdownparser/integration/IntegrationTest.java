@@ -18,11 +18,12 @@
  *
  */
 
-package org.kizombadev.markdownparser;
+package org.kizombadev.markdownparser.integration;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.kizombadev.markdownparser.Program;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -51,8 +52,9 @@ public class IntegrationTest {
     }
 
     private void executeIntegrationTest(String testcase) throws URISyntaxException {
-        File markdownFile = new File(IntegrationTest.class.getResource("/org/kizombadev/markdownparser/integrationtest/" + testcase + ".md").toURI());
-        File expectedHtmlFile = new File(IntegrationTest.class.getResource("/org/kizombadev/markdownparser/integrationtest/" + testcase + ".html").toURI());
+        String integrationTestPath = "/org/kizombadev/markdownparser/integrationtest";
+        File markdownFile = new File(IntegrationTest.class.getResource(String.format("%s/%s.md", integrationTestPath, testcase)).toURI());
+        File expectedHtmlFile = new File(IntegrationTest.class.getResource(String.format("%s/%s.html", integrationTestPath, testcase)).toURI());
 
         File generatedHtmlFile = Paths.get(folder.getRoot().getPath(), "output.html").toFile();
 

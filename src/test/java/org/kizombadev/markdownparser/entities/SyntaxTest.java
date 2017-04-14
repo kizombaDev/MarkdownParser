@@ -18,11 +18,9 @@
  *
  */
 
-package org.kizombadev.markdownparser;
+package org.kizombadev.markdownparser.entities;
 
 import org.junit.Test;
-import org.kizombadev.markdownparser.entities.Syntax;
-import org.kizombadev.markdownparser.entities.SyntaxType;
 
 import static org.kizombadev.markdownparser.helper.SyntaxAssert.assertThat;
 

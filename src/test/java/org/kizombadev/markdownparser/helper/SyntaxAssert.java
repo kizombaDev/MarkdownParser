@@ -21,6 +21,7 @@
 package org.kizombadev.markdownparser.helper;
 
 import org.assertj.core.api.AbstractAssert;
+import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 
@@ -54,6 +55,74 @@ public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
         if (actual.getType() != type) {
             failWithMessage("Expected syntax type to be <%s> but was <%s>", type, actual.getType());
         }
+
+        return this;
+    }
+
+    public SyntaxAssert hasChildrenCount(int count) {
+        isNotNull();
+
+        if (actual.getChildren().size() != count) {
+            failWithMessage("Expected syntax has <%s> children but were <%s>", actual.getChildren().size(), count);
+        }
+
+        return this;
+    }
+
+    public SyntaxAssert isRootAndFirstContainerAndFirstText(SyntaxType containerTypeOne, String text) {
+        return doTwoPlains(containerTypeOne, text, 0, 0);
+    }
+
+    public SyntaxAssert isRootAndFirstContainerAndSecondText(SyntaxType containerTypeOne, String text) {
+        return doTwoPlains(containerTypeOne, text, 0, 1);
+    }
+
+    public SyntaxAssert isRootAndFirstContainerAndThirdText(SyntaxType containerTypeOne, String text) {
+        return doTwoPlains(containerTypeOne, text, 0, 2);
+    }
+
+    public SyntaxAssert isRootAndSecondContainerAndFirstText(SyntaxType containerTypeOne, String text) {
+        return doTwoPlains(containerTypeOne, text, 1, 0);
+    }
+
+    public SyntaxAssert isRootAndFirstContainerAndFirstContainerAndFirstText(SyntaxType containerTypeOne, SyntaxType containerTypeTwo, String text) {
+        return doThreePlains(containerTypeOne, containerTypeTwo, text, 0);
+    }
+
+    public SyntaxAssert isRootAndFirstContainerAndSecondContainerAndFirstText(SyntaxType containerTypeOne, SyntaxType containerTypeTwo, String text) {
+        return doThreePlains(containerTypeOne, containerTypeTwo, text, 1);
+    }
+
+
+    public SyntaxAssert isRootAndFirstContainerAndThirdContainerAndFirstText(SyntaxType containerTypeOne, SyntaxType containerTypeTwo, String text) {
+        return doThreePlains(containerTypeOne, containerTypeTwo, text, 2);
+    }
+
+    @NotNull
+    private SyntaxAssert doThreePlains(SyntaxType containerTypeOne, SyntaxType containerTypeTwo, String text, int index) {
+        isNotNull();
+
+        if (!SyntaxType.ROOT.equals(actual.getType())) {
+            failWithMessage("the root syntax element does not exit");
+        }
+
+        assertThat(actual.getChildren().get(0)).isSyntaxTypeOf(containerTypeOne);
+        assertThat(actual.getChildren().get(0).getChildren().get(index)).isSyntaxTypeOf(containerTypeTwo);
+        assertThat(actual.getChildren().get(0).getChildren().get(index).getChildren().get(0)).isTextElementWith(text);
+
+        return this;
+    }
+
+    @NotNull
+    private SyntaxAssert doTwoPlains(SyntaxType containerTypeOne, String text, int indexOne, int indexTwo) {
+        isNotNull();
+
+        if (!SyntaxType.ROOT.equals(actual.getType())) {
+            failWithMessage("the root syntax element does not exit");
+        }
+
+        assertThat(actual.getChildren().get(indexOne)).isSyntaxTypeOf(containerTypeOne);
+        assertThat(actual.getChildren().get(indexOne).getChildren().get(indexTwo)).isTextElementWith(text);
 
         return this;
     }
