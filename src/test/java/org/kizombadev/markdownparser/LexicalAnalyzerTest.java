@@ -6,18 +6,19 @@ import org.assertj.core.api.JUnitSoftAssertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.kizombadev.markdownparser.entities.Token;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class TokenizerTest {
+public class LexicalAnalyzerTest {
     @Rule
     public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
-    private Tokenizer underTest;
+    private LexicalAnalyzer underTest;
     private String newLine = System.lineSeparator();
 
     @Before
     public void Init() {
-        underTest = Tokenizer.create();
+        underTest = LexicalAnalyzer.create();
     }
 
     @Test

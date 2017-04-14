@@ -2,6 +2,7 @@ package org.kizombadev.markdownparser;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.kizombadev.markdownparser.entities.Token;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 

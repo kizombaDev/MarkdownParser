@@ -1,4 +1,4 @@
-package org.kizombadev.markdownparser;
+package org.kizombadev.markdownparser.entities;
 
 
 import com.google.common.base.MoreObjects;

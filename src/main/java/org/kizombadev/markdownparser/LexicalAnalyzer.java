@@ -3,19 +3,20 @@ package org.kizombadev.markdownparser;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import org.kizombadev.markdownparser.entities.Token;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Tokenizer {
+public class LexicalAnalyzer {
     private List<Token> tokens = new ArrayList<>();
 
     private StringBuilder text = new StringBuilder();
 
-    public static Tokenizer create() {
-        return new Tokenizer();
+    public static LexicalAnalyzer create() {
+        return new LexicalAnalyzer();
     }
 
     public ImmutableCollection<Token> parse(String input) {
