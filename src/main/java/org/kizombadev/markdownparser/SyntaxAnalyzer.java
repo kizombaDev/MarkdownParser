@@ -1,10 +1,16 @@
 package org.kizombadev.markdownparser;
 
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.kizombadev.markdownparser.entities.*;
+import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
+import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+
+//todo make the sytaxTree Immutable
 
 public class SyntaxAnalyzer {
 
@@ -12,14 +18,15 @@ public class SyntaxAnalyzer {
     private int tokenIndex = 0;
     private Deque<State> stack = new ArrayDeque<>();
 
+    @NotNull
     public static SyntaxAnalyzer create() {
         return new SyntaxAnalyzer();
     }
 
-    public Syntax parse(ImmutableList<Token> tokens) {
+    public ImmutableSyntax parse(ImmutableList<Token> tokens) {
         this.tokens = tokens;
 
-        RootSyntax root = new RootSyntax();
+        MutableSyntax root = new RootSyntax();
 
         Token currentToken = currentToken();
 
@@ -46,24 +53,24 @@ public class SyntaxAnalyzer {
         return root;
     }
 
-    private void handleQuotation(RootSyntax currentRoot) {
-        Syntax quotation = new Quotation();
+    private void handleQuotation(MutableSyntax currentRoot) {
+        MutableSyntax quotation = new Quotation();
         stepTokenForward();
 
         handleLineContainer(quotation);
         currentRoot.addChild(quotation);
     }
 
-    private void handleBigHeadlineLine(Syntax currentRoot) {
-        Syntax bigHeadline = new BigHeadline();
+    private void handleBigHeadlineLine(MutableSyntax currentRoot) {
+        MutableSyntax bigHeadline = new BigHeadline();
         stepTokenForward();
 
         handleLineContainer(bigHeadline);
         currentRoot.addChild(bigHeadline);
     }
 
-    private void handleSmallHeadlineLine(Syntax currentRoot) {
-        Syntax smallHeadline = new SmallHeadline();
+    private void handleSmallHeadlineLine(MutableSyntax currentRoot) {
+        MutableSyntax smallHeadline = new SmallHeadline();
         stepTokenForward();
 
 
@@ -71,7 +78,7 @@ public class SyntaxAnalyzer {
         currentRoot.addChild(smallHeadline);
     }
 
-    private void handleLineContainer(Syntax currentRoot) {
+    private void handleLineContainer(MutableSyntax currentRoot) {
 
         Token currentToken = currentToken();
 
@@ -92,7 +99,7 @@ public class SyntaxAnalyzer {
                     handleItalic(currentRoot);
                 }
             } else if (currentToken.isTextToken()) {
-                currentRoot.addChild(new TextSyntax());
+                currentRoot.addChild(new TextSyntax(currentToken.getTextValue()));
                 stepTokenForward();
             }
 
@@ -100,16 +107,16 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private void handleBold(Syntax currentRoot) {
+    private void handleBold(MutableSyntax currentRoot) {
         handleBeginEndToken(State.BOLD_BEGIN, State.BOLD_END, new BoldSyntax(), currentRoot);
 
     }
 
-    private void handleItalic(Syntax currentRoot) {
+    private void handleItalic(MutableSyntax currentRoot) {
         handleBeginEndToken(State.ITALIC_BEGIN, State.ITALIC_END, new ItalicSyntax(), currentRoot);
     }
 
-    private void handleBeginEndToken(State beginSate, State endState, Syntax newSyntaxElement, Syntax currentRoot) {
+    private void handleBeginEndToken(State beginSate, State endState, MutableSyntax newSyntaxElement, MutableSyntax currentRoot) {
         stepTokenForward();
 
         stack.push(beginSate);
@@ -118,7 +125,7 @@ public class SyntaxAnalyzer {
 
         if (stack.peek().equals(endState)) {
 
-            for (Syntax child : tempContainer.getChildren()) {
+            for (ImmutableSyntax child : tempContainer.getChildren()) {
                 newSyntaxElement.addChild(child);
             }
             currentRoot.addChild(newSyntaxElement);
@@ -128,6 +135,7 @@ public class SyntaxAnalyzer {
         }
     }
 
+    @Nullable
     private Token currentToken() {
         if (tokenIndex >= tokens.size()) {
             return null;

@@ -3,6 +3,7 @@ package org.kizombadev.markdownparser;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Token;
 
 import java.util.ArrayList;
@@ -19,10 +20,11 @@ public class LexicalAnalyzer {
         return new LexicalAnalyzer();
     }
 
-    public ImmutableCollection<Token> parse(String input) {
+    @NotNull
+    public ImmutableCollection<Token> parse(final String input) {
         checkNotNull(input);
 
-        InputStream tokenStream = InputStream.create(input);
+        final InputStream tokenStream = InputStream.create(input);
 
         while (tokenStream.hasNext()) {
             tokenStream.next();
