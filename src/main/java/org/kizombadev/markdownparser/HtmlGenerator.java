@@ -5,7 +5,8 @@ import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 
 public class HtmlGenerator {
 
-    private ImmutableSyntax root;
+    private static final String HTML_START = "<!DOCTYPE html><html><body>";
+    private static final String HTML_END = "</body></html>";
 
     private HtmlGenerator() {
     }
@@ -15,11 +16,12 @@ public class HtmlGenerator {
     }
 
     public String parse(ImmutableSyntax root) {
-        this.root = root;
 
-        StringBuilder html = new StringBuilder();
+        StringBuilder html = new StringBuilder(HTML_START);
 
         handle(root, html);
+
+        html.append(HTML_END);
 
         return html.toString();
     }
@@ -37,8 +39,8 @@ public class HtmlGenerator {
                 handleTag("b", child, html);
             } else if (child instanceof ItalicSyntax) {
                 handleTag("i", child, html);
-            } else if (child instanceof ItalicSyntax) {
-                handleTag("b", child, html);
+            } else if (child instanceof QuotationSyntax) {
+                handleTag("blockquote", child, html);
             }
         }
     }

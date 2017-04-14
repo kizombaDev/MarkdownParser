@@ -1,6 +1,6 @@
 package org.kizombadev.markdownparser.entities;
 
 
-public class Quotation extends Syntax {
+public class QuotationSyntax extends Syntax {
 
 }

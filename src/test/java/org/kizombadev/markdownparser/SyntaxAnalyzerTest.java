@@ -62,7 +62,7 @@ public class SyntaxAnalyzerTest {
     public void testGreaterThanSignText() {
         ImmutableSyntax syntax = underTest.parse(ImmutableList.of(Token.GreaterThanSign, Token.createTextToken("Foo")));
         assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(Quotation.class);
+        assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(QuotationSyntax.class);
         assertThat(syntax.getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
         assertThat(syntax.getChildren().get(0).getChildren().get(0).convertTo(TextSyntax.class).getText()).isEqualTo("Foo");
     }

@@ -8,6 +8,8 @@ import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HtmlGeneratorTest {
+    private static final String HTML_START = "<!DOCTYPE html><html><body>";
+    private static final String HTML_END = "</body></html>";
     private HtmlGenerator generator;
 
     @Before
@@ -16,25 +18,28 @@ public class HtmlGeneratorTest {
     }
 
     @Test
-    public void test() {
+    public void testBigHeadline() {
         assertElementWithOneTextChild(new BigHeadline(), "h1");
-
     }
 
     @Test
-    public void test2() {
+    public void testSmallHeadline() {
         assertElementWithOneTextChild(new SmallHeadline(), "h2");
-
     }
 
     @Test
-    public void test3() {
+    public void testItalic() {
         assertElementWithOneTextChild(new ItalicSyntax(), "i");
     }
 
     @Test
-    public void test4() {
+    public void testBold() {
         assertElementWithOneTextChild(new BoldSyntax(), "b");
+    }
+
+    @Test
+    public void testQuotation() {
+        assertElementWithOneTextChild(new QuotationSyntax(), "blockquote");
     }
 
     private void assertElementWithOneTextChild(MutableSyntax syntax, String htmlTag) {
@@ -47,6 +52,6 @@ public class HtmlGeneratorTest {
         String html = generator.parse(root);
 
         //assert
-        assertThat(html).isEqualTo("<" + htmlTag + ">Foo</" + htmlTag + ">");
+        assertThat(html).isEqualTo(HTML_START + "<" + htmlTag + ">Foo</" + htmlTag + ">" + HTML_END);
     }
 }

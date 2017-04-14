@@ -54,7 +54,7 @@ public class SyntaxAnalyzer {
     }
 
     private void handleQuotation(MutableSyntax currentRoot) {
-        MutableSyntax quotation = new Quotation();
+        MutableSyntax quotation = new QuotationSyntax();
         stepTokenForward();
 
         handleLineContainer(quotation);
