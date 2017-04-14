@@ -61,6 +61,8 @@ public class SyntaxAnalyzer {
                 handleQuotation(root);
             } else if (currentToken.equals(Token.DoubleStar)) {
                 handleBold(root);
+            } else if (currentToken.equals(Token.Star) && nextToken() == Token.Blank) {
+                handleUnorderedList(root);
             } else if (currentToken.equals(Token.Star)) {
                 handleItalic(root);
             } else if (currentToken.equals(Token.NewLine)) {
@@ -71,6 +73,29 @@ public class SyntaxAnalyzer {
         }
 
         return root;
+    }
+
+    private void handleUnorderedList(MutableSyntax currentRoot) {
+        MutableSyntax unorderedList = new UnorderedListSyntax();
+
+        while (currentToken() == Token.Star && nextToken() == Token.Blank) {
+            stepTokenForward();
+            stepTokenForward();
+
+            handleUnorderedListItem(unorderedList);
+
+            if (currentToken() == Token.NewLine) {
+                stepTokenForward();
+            }
+        }
+
+        currentRoot.addChild(unorderedList);
+    }
+
+    private void handleUnorderedListItem(MutableSyntax unorderedList) {
+        MutableSyntax unorderedListItem = new UnorderedListItemSyntax();
+        handleLineContainer(unorderedListItem);
+        unorderedList.addChild(unorderedListItem);
     }
 
     private void handleQuotation(MutableSyntax currentRoot) {
@@ -129,7 +154,6 @@ public class SyntaxAnalyzer {
 
     private void handleBold(MutableSyntax currentRoot) {
         handleBeginEndToken(State.BOLD_BEGIN, State.BOLD_END, new BoldSyntax(), currentRoot);
-
     }
 
     private void handleItalic(MutableSyntax currentRoot) {
@@ -152,6 +176,8 @@ public class SyntaxAnalyzer {
 
             stack.pop();
             stack.pop();
+        } else if (stack.peek().equals(beginSate)) {
+            stack.pop();
         }
     }
 
@@ -162,6 +188,15 @@ public class SyntaxAnalyzer {
         }
 
         return tokens.get(tokenIndex);
+    }
+
+    @Nullable
+    private Token nextToken() {
+        if (tokenIndex + 1 >= tokens.size()) {
+            return null;
+        }
+
+        return tokens.get(tokenIndex + 1);
     }
 
     private void stepTokenForward() {

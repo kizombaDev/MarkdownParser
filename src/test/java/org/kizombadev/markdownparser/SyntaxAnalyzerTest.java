@@ -104,4 +104,27 @@ public class SyntaxAnalyzerTest {
         assertThat(syntax.getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
         assertThat(syntax.getChildren().get(0).getChildren().get(0).convertTo(TextSyntax.class).getText()).isEqualTo("Foo");
     }
+
+    @Test
+    public void testUnorderedListWithOneItem() {
+        ImmutableSyntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.NewLine));
+        assertThat(syntax.getChildren()).hasSize(1);
+        assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(UnorderedListSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(UnorderedListItemSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0).convertTo(TextSyntax.class).getText()).isEqualTo("Foo");
+    }
+
+    @Test
+    public void testUnorderedListWihtTwoItems() {
+        ImmutableSyntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.NewLine, Token.Star, Token.Blank, Token.createTextToken("Bar")));
+        assertThat(syntax.getChildren()).hasSize(1);
+        assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(UnorderedListSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(UnorderedListItemSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0).convertTo(TextSyntax.class).getText()).isEqualTo("Foo");
+        assertThat(syntax.getChildren().get(0).getChildren().get(1)).isExactlyInstanceOf(UnorderedListItemSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0).convertTo(TextSyntax.class).getText()).isEqualTo("Bar");
+    }
 }

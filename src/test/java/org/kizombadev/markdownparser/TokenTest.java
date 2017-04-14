@@ -35,6 +35,13 @@ public class TokenTest {
     }
 
     @Test
+    public void testBlank() {
+        Token underTest = Token.Blank;
+        assertThat(underTest).isEqualTo(Token.Blank);
+    }
+
+
+    @Test
     public void testStarToken() {
         Token underTest = Token.Star;
         assertThat(underTest).isEqualTo(Token.Star);

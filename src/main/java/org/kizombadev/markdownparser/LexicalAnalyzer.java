@@ -36,6 +36,7 @@ public class LexicalAnalyzer {
 
     private StringBuilder text = new StringBuilder();
 
+    @NotNull
     public static LexicalAnalyzer create() {
         return new LexicalAnalyzer();
     }
@@ -73,6 +74,9 @@ public class LexicalAnalyzer {
             } else if (tokenStream.current() == '>') {
                 handleEndOfText();
                 tokens.add(Token.GreaterThanSign);
+            } else if (tokenStream.current() == ' ') {
+                handleEndOfText();
+                tokens.add(Token.Blank);
             } else {
                 text.append(tokenStream.current());
             }

@@ -18,15 +18,7 @@
  *
  */
 
-package org.kizombadev.markdownparser;
+package org.kizombadev.markdownparser.entities;
 
-public class MarkdownParser {
-
-    private MarkdownParser() {
-
-    }
-
-    public static MarkdownParser create() {
-        return new MarkdownParser();
-    }
+public class UnorderedListSyntax extends Syntax {
 }

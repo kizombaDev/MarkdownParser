@@ -53,7 +53,7 @@ public class LexicalAnalyzerTest {
 
     @Test
     public void TestMethod3() {
-        assertThat(underTest.parse("# ##")).containsSequence(Token.NumberSign, Token.createTextToken(" "), Token.DoubleNumberSign);
+        assertThat(underTest.parse("# ##")).containsSequence(Token.NumberSign, Token.Blank, Token.DoubleNumberSign);
     }
 
     @Test
@@ -88,18 +88,18 @@ public class LexicalAnalyzerTest {
 
     @Test
     public void TestMethod10() {
-        assertThat(underTest.parse(" #")).containsSequence(Token.createTextToken(" "), Token.NumberSign);
+        assertThat(underTest.parse(" #")).containsSequence(Token.Blank, Token.NumberSign);
     }
 
     @Test
     public void TestMethod11() {
-        assertThat(underTest.parse("# Foo")).containsSequence(Token.NumberSign, Token.createTextToken(" Foo"));
+        assertThat(underTest.parse("# Foo")).containsSequence(Token.NumberSign, Token.Blank, Token.createTextToken("Foo"));
     }
 
     @Test
     public void TestMethod12() {
         assertThat(underTest.parse("# *Foo*")).containsSequence(Token.NumberSign,
-                Token.createTextToken(" "),
+                Token.Blank,
                 Token.Star,
                 Token.createTextToken("Foo"),
                 Token.Star);
@@ -111,7 +111,7 @@ public class LexicalAnalyzerTest {
                 Token.Star,
                 Token.createTextToken("Foo"),
                 Token.Star,
-                Token.createTextToken(" "),
+                Token.Blank,
                 Token.DoubleStar,
                 Token.createTextToken("Bar"),
                 Token.DoubleStar);
@@ -119,50 +119,53 @@ public class LexicalAnalyzerTest {
 
     @Test
     public void test() {
-        String markdown = "#Das ist eine h1-Uberschrift\n" +
+        String markdown = "#h1-Uberschrift\n" +
                 "\n" +
-                "##Das ist eine h2-Uberschrift\n" +
+                "##h2-Uberschrift\n" +
                 "\n" +
-                "*Erster Punkt\n" +
-                "*Zweiter Punkt\n" +
+                "* ErsterPunkt\n" +
+                "* ZweiterPunkt\n" +
                 "\n" +
-                "*Ein neuer Punkt\n" +
+                "* NeuerPunkt\n" +
                 "\n" +
-                "**Das hier ist Fett**\n" +
-                "*Das ist ein kursiver Text*\n" +
+                "**Fett**\n" +
+                "*KursiverText*\n" +
                 "\n" +
-                ">Das ist mein Zitat";
+                ">Zitat";
 
         ImmutableList<Token> expectedTokens = ImmutableList.copyOf(new Token[]{Token.NumberSign,
-                Token.createTextToken("Das ist eine h1-Uberschrift"),
+                Token.createTextToken("h1-Uberschrift"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.DoubleNumberSign,
-                Token.createTextToken("Das ist eine h2-Uberschrift"),
+                Token.createTextToken("h2-Uberschrift"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Erster Punkt"),
+                Token.Blank,
+                Token.createTextToken("ErsterPunkt"),
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Zweiter Punkt"),
+                Token.Blank,
+                Token.createTextToken("ZweiterPunkt"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Ein neuer Punkt"),
+                Token.Blank,
+                Token.createTextToken("NeuerPunkt"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.DoubleStar,
-                Token.createTextToken("Das hier ist Fett"),
+                Token.createTextToken("Fett"),
                 Token.DoubleStar,
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Das ist ein kursiver Text"),
+                Token.createTextToken("KursiverText"),
                 Token.Star,
                 Token.NewLine,
                 Token.NewLine,
                 Token.GreaterThanSign,
-                Token.createTextToken("Das ist mein Zitat")});
+                Token.createTextToken("Zitat")});
 
         ImmutableList<Token> actualTokens = underTest.parse(markdown).asList();
 

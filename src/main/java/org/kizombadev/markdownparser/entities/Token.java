@@ -34,6 +34,8 @@ public class Token {
     public static final Token DoubleNumberSign = create(Category.DOUBLE_NUMBER_SIGN);
     public static final Token NewLine = create(Category.NEW_LINE);
     public static final Token GreaterThanSign = create(Category.GREATER_THAN_SIGN);
+    public static final Token Blank = create(Category.BLANK);
+
     private String value;
     private Category category;
 
@@ -101,6 +103,7 @@ public class Token {
         DOUBLE_STAR,
         NUMBER_SIGN,
         NEW_LINE,
+        BLANK,
         GREATER_THAN_SIGN
     }
 }
