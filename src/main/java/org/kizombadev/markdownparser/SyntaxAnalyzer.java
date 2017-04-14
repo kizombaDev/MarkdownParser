@@ -25,14 +25,26 @@ public class SyntaxAnalyzer {
                 handleBigHeadlineLine(root);
             } else if (currentToken().getCategory().equals(Token.Category.DOUBLE_NUMBER_SIGN)) {
                 handleSmallHeadlineLine(root);
+            } else if (currentToken().getCategory().equals(Token.Category.GREATER_THAN_SIGN)) {
+                handleQuotation(root);
             }
 
             if (currentToken() != null && currentToken().getCategory().equals(Token.Category.NEW_LINE)) {
                 stepTokenForward();
             }
+
+
         }
 
         return root;
+    }
+
+    private void handleQuotation(RootSyntax currentRoot) {
+        Syntax quotation = new Quotation();
+        stepTokenForward();
+
+        handleLineContainer(quotation);
+        currentRoot.addChild(quotation);
     }
 
     private void handleBigHeadlineLine(Syntax currentRoot) {

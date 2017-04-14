@@ -43,6 +43,14 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
+    public void test5() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.create(Token.Category.GREATER_THAN_SIGN), Token.createText("Foo")));
+        assertThat(syntax.getChildren()).hasSize(1);
+        assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(Quotation.class);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
+    }
+
+    @Test
     @Ignore
     public void test4() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.create(Token.Category.NUMBER_SIGN), Token.createText("Foo"), Token.create(Token.Category.DOUBLE_STAR), Token.createText("Bar"), Token.create(Token.Category.DOUBLE_STAR)));
@@ -52,4 +60,5 @@ public class SyntaxAnalyzerTest {
         assertThat(syntax.getChildren().get(0).getChildren().get(1)).isExactlyInstanceOf(BoldSyntax.class);
         assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
     }
+
 }
