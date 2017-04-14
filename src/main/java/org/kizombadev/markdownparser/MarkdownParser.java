@@ -18,8 +18,7 @@
  *
  */
 
-package org.kizombadev.markdownparser.entities;
+package org.kizombadev.markdownparser;
 
-
-public class BoldSyntax extends Syntax {
+public class MarkdownParser {
 }
