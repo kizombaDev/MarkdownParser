@@ -74,5 +74,4 @@ public class SyntaxAnalyzerTest {
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(ItalicSyntax.class);
         assertThat(syntax.getChildren().get(0).getChildren().get(0)).isExactlyInstanceOf(TextSyntax.class);
     }
-
 }

@@ -3,13 +3,14 @@ package org.kizombadev.markdownparser;
 import com.google.common.collect.ImmutableList;
 import org.kizombadev.markdownparser.entities.*;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class SyntaxAnalyzer {
 
     private ImmutableList<Token> tokens;
     private int tokenIndex = 0;
-    private Stack<State> stack = new Stack<>();
+    private Deque<State> stack = new ArrayDeque<>();
 
     public static SyntaxAnalyzer create() {
         return new SyntaxAnalyzer();
@@ -72,65 +73,55 @@ public class SyntaxAnalyzer {
 
     private void handleLineContainer(Syntax currentRoot) {
 
-        while (currentToken() != null && !currentToken().equals(Token.NewLine)) {
+        Token currentToken = currentToken();
 
-            if (currentToken() != null && currentToken().equals(Token.DoubleStar)) {
+        while (currentToken != null && !currentToken.equals(Token.NewLine)) {
+
+            if (currentToken.equals(Token.DoubleStar)) {
                 if (!stack.isEmpty() && stack.peek().equals(State.BOLD_BEGIN)) {
                     stack.push(State.BOLD_END);
                     return;
                 } else {
                     handleBold(currentRoot);
                 }
-            } else if (currentToken() != null && currentToken().equals(Token.Star)) {
+            } else if (currentToken.equals(Token.Star)) {
                 if (!stack.isEmpty() && stack.peek().equals(State.ITALIC_BEGIN)) {
                     stack.push(State.ITALIC_END);
                     return;
                 } else {
                     handleItalic(currentRoot);
                 }
-            } else if (currentToken() != null && currentToken().isTextToken()) {
+            } else if (currentToken.isTextToken()) {
                 currentRoot.addChild(new TextSyntax());
                 stepTokenForward();
             }
+
+            currentToken = currentToken();
         }
     }
 
     private void handleBold(Syntax currentRoot) {
-        stepTokenForward();
+        handleBeginEndToken(State.BOLD_BEGIN, State.BOLD_END, new BoldSyntax(), currentRoot);
 
-
-        stack.push(State.BOLD_BEGIN);
-        TempContainer tempContainer = new TempContainer();
-        handleLineContainer(tempContainer);
-
-        if (stack.peek().equals(State.BOLD_END)) {
-            Syntax bold = new BoldSyntax();
-
-            for (Syntax child : tempContainer.getChildren()) {
-                bold.addChild(child);
-            }
-            currentRoot.addChild(bold);
-
-            stack.pop();
-            stack.pop();
-        }
     }
 
     private void handleItalic(Syntax currentRoot) {
+        handleBeginEndToken(State.ITALIC_BEGIN, State.ITALIC_END, new ItalicSyntax(), currentRoot);
+    }
+
+    private void handleBeginEndToken(State beginSate, State endState, Syntax newSyntaxElement, Syntax currentRoot) {
         stepTokenForward();
 
-
-        stack.push(State.ITALIC_BEGIN);
+        stack.push(beginSate);
         TempContainer tempContainer = new TempContainer();
         handleLineContainer(tempContainer);
 
-        if (stack.peek().equals(State.ITALIC_END)) {
-            Syntax italic = new ItalicSyntax();
+        if (stack.peek().equals(endState)) {
 
             for (Syntax child : tempContainer.getChildren()) {
-                italic.addChild(child);
+                newSyntaxElement.addChild(child);
             }
-            currentRoot.addChild(italic);
+            currentRoot.addChild(newSyntaxElement);
 
             stack.pop();
             stack.pop();
