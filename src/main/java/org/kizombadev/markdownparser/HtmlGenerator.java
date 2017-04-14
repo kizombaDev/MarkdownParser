@@ -21,8 +21,8 @@
 package org.kizombadev.markdownparser;
 
 import org.jetbrains.annotations.NotNull;
+import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
-import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 
 public class HtmlGenerator {
 
@@ -37,7 +37,7 @@ public class HtmlGenerator {
         return new HtmlGenerator();
     }
 
-    public String parse(ImmutableSyntax root) {
+    public String parse(Syntax root) {
 
         StringBuilder html = new StringBuilder();
 
@@ -48,25 +48,32 @@ public class HtmlGenerator {
         return html.toString();
     }
 
-    private void handle(ImmutableSyntax root, StringBuilder html) {
-        for (ImmutableSyntax child : root.getChildren()) {
-            if (SyntaxType.BigHeadline.equals(child.getType())) {
+    private void handle(Syntax root, StringBuilder html) {
+        for (Syntax child : root.getChildren()) {
+            if (SyntaxType.BIG_HEADLINE.equals(child.getType())) {
                 handleTag("h1", child, html);
-            } else if (SyntaxType.SmallHeadline.equals(child.getType())) {
+            } else if (SyntaxType.SMALL_HEADLINE.equals(child.getType())) {
                 handleTag("h2", child, html);
-            } else if (SyntaxType.Text.equals(child.getType())) {
+            } else if (SyntaxType.TEXT.equals(child.getType())) {
                 html.append(child.getContent());
-            } else if (SyntaxType.Bold.equals(child.getType())) {
+            } else if (SyntaxType.BOLD.equals(child.getType())) {
                 handleTag("b", child, html);
-            } else if (SyntaxType.Italic.equals(child.getType())) {
+            } else if (SyntaxType.ITALIC.equals(child.getType())) {
                 handleTag("i", child, html);
-            } else if (SyntaxType.Quotation.equals(child.getType())) {
+            } else if (SyntaxType.QUOTATION.equals(child.getType())) {
                 handleTag("blockquote", child, html);
+            } else if (SyntaxType.UNORDERED_LIST.equals(child.getType())) {
+                handleTag("ul", child, html);
+            } else if (SyntaxType.UNORDERED_LIST_ITEM.equals(child.getType())) {
+                handleTag("li", child, html);
+            } else {
+                //todo exception text
+                throw new IllegalStateException();
             }
         }
     }
 
-    private void handleTag(String htmlTag, ImmutableSyntax child, StringBuilder html) {
+    private void handleTag(String htmlTag, Syntax child, StringBuilder html) {
         html.append("<");
         html.append(htmlTag);
         html.append(">");

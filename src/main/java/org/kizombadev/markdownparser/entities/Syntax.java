@@ -24,8 +24,6 @@ package org.kizombadev.markdownparser.entities;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
-import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,18 +31,18 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Syntax implements MutableSyntax {
-    private final List<ImmutableSyntax> children = new ArrayList<>();
+public class Syntax {
+    private final List<Syntax> children = new ArrayList<>();
     private String content = null;
     private SyntaxType type;
 
     @NotNull
-    public static Syntax createWithChildren(SyntaxType type, ImmutableSyntax... children) {
+    public static Syntax createWithChildren(SyntaxType type, Syntax... children) {
         checkNotNull(type);
 
         Syntax syntax = new Syntax();
         if (children != null) {
-            Arrays.stream(children).forEach(s -> syntax.addChild(s));
+            Arrays.stream(children).forEach(syntax::addChild);
         }
         syntax.type = type;
         return syntax;
@@ -65,17 +63,13 @@ public class Syntax implements MutableSyntax {
         return createWithChildren(type, null);
     }
 
-    public ImmutableList<ImmutableSyntax> getChildren() {
+    public ImmutableList<Syntax> getChildren() {
         return ImmutableList.copyOf(children);
     }
 
-    public void addChild(ImmutableSyntax syntax) {
+    public void addChild(Syntax syntax) {
         checkNotNull(syntax);
         children.add(syntax);
-    }
-
-    public <T extends ImmutableSyntax> T convertTo(Class<T> type) {
-        return (T) this;
     }
 
     @Nullable

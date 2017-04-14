@@ -30,22 +30,22 @@ import static org.kizombadev.markdownparser.helper.SyntaxAssert.assertThat;
 public class SyntaxTest {
     @Test
     public void testCreate() {
-        Syntax underTest = Syntax.create(SyntaxType.Quotation);
-        assertThat(underTest).isSyntaxTypeOf(SyntaxType.Quotation);
+        Syntax underTest = Syntax.create(SyntaxType.QUOTATION);
+        assertThat(underTest).isSyntaxTypeOf(SyntaxType.QUOTATION);
     }
 
     @Test
     public void testCreateWithContent() {
-        Syntax underTest = Syntax.createWithContent(SyntaxType.Text, "Foo");
+        Syntax underTest = Syntax.createWithContent(SyntaxType.TEXT, "Foo");
         assertThat(underTest).isTextElementWith("Foo");
     }
 
     @Test
     public void testCreateWithChildren() {
-        Syntax underTest = Syntax.createWithChildren(SyntaxType.Bold, Syntax.create(SyntaxType.Italic), Syntax.create(SyntaxType.Text));
+        Syntax underTest = Syntax.createWithChildren(SyntaxType.BOLD, Syntax.create(SyntaxType.ITALIC), Syntax.create(SyntaxType.TEXT));
 
-        assertThat(underTest).isSyntaxTypeOf(SyntaxType.Bold);
-        assertThat(underTest.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.Italic);
-        assertThat(underTest.getChildren().get(1)).isSyntaxTypeOf(SyntaxType.Text);
+        assertThat(underTest).isSyntaxTypeOf(SyntaxType.BOLD);
+        assertThat(underTest.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.ITALIC);
+        assertThat(underTest.getChildren().get(1)).isSyntaxTypeOf(SyntaxType.TEXT);
     }
 }

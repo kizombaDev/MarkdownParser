@@ -21,28 +21,25 @@
 package org.kizombadev.markdownparser.helper;
 
 import org.assertj.core.api.AbstractAssert;
+import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
-import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 
 import java.util.Objects;
 
-public class SyntaxAssert extends AbstractAssert<SyntaxAssert, ImmutableSyntax> {
+public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
 
-    // 2 - Write a constructor to build your assertion class with the object you want make assertions on.
-    public SyntaxAssert(ImmutableSyntax actual) {
+    public SyntaxAssert(Syntax actual) {
         super(actual, SyntaxAssert.class);
     }
 
-    // 3 - A fluent entry point to your specific assertion class, use it with static import.
-    public static SyntaxAssert assertThat(ImmutableSyntax actual) {
+    public static SyntaxAssert assertThat(Syntax actual) {
         return new SyntaxAssert(actual);
     }
 
-    // 4 - a specific assertion !
     public SyntaxAssert isTextElementWith(String content) {
         isNotNull();
 
-        assertThat(actual).isSyntaxTypeOf(SyntaxType.Text);
+        assertThat(actual).isSyntaxTypeOf(SyntaxType.TEXT);
 
         if (!Objects.equals(actual.getContent(), content)) {
             failWithMessage("Expected content to be <%s> but was <%s>", content, actual.getContent());
@@ -51,7 +48,6 @@ public class SyntaxAssert extends AbstractAssert<SyntaxAssert, ImmutableSyntax> 
         return this;
     }
 
-    // 4 - another specific assertion !
     public SyntaxAssert isSyntaxTypeOf(SyntaxType type) {
         isNotNull();
 

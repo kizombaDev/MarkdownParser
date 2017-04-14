@@ -21,5 +21,5 @@
 package org.kizombadev.markdownparser.entities;
 
 public enum SyntaxType {
-    Text, Root, BigHeadline, Bold, Quotation, SmallHeadline, UnorderedList, Italic, UnorderdListItem
+    TEXT, ROOT, BIG_HEADLINE, BOLD, QUOTATION, SMALL_HEADLINE, UNORDERED_LIST, ITALIC, UNORDERED_LIST_ITEM
 }

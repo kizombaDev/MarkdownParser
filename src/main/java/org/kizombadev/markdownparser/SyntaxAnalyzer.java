@@ -26,8 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.Token;
-import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
-import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 
 //todo make the syntaxTree Immutable
 
@@ -43,10 +41,10 @@ public class SyntaxAnalyzer {
         return new SyntaxAnalyzer();
     }
 
-    public ImmutableSyntax parse(ImmutableList<Token> tokens) {
+    public Syntax parse(ImmutableList<Token> tokens) {
         this.tokens = tokens;
 
-        MutableSyntax root = Syntax.create(SyntaxType.Root);
+        Syntax root = Syntax.create(SyntaxType.ROOT);
 
         Token currentToken = currentToken();
 
@@ -74,8 +72,8 @@ public class SyntaxAnalyzer {
         return root;
     }
 
-    private void handleUnorderedList(MutableSyntax currentRoot) {
-        MutableSyntax unorderedList = Syntax.create(SyntaxType.UnorderedList);
+    private void handleUnorderedList(Syntax currentRoot) {
+        Syntax unorderedList = Syntax.create(SyntaxType.UNORDERED_LIST);
 
         while (Token.Star.equals(currentToken()) && Token.Blank.equals(nextToken())) {
             stepTokenForward();
@@ -91,30 +89,30 @@ public class SyntaxAnalyzer {
         currentRoot.addChild(unorderedList);
     }
 
-    private void handleUnorderedListItem(MutableSyntax unorderedList) {
-        MutableSyntax unorderedListItem = Syntax.create(SyntaxType.UnorderdListItem);
+    private void handleUnorderedListItem(Syntax unorderedList) {
+        Syntax unorderedListItem = Syntax.create(SyntaxType.UNORDERED_LIST_ITEM);
         handleLineContainer(unorderedListItem);
         unorderedList.addChild(unorderedListItem);
     }
 
-    private void handleQuotation(MutableSyntax currentRoot) {
-        MutableSyntax quotation = Syntax.create(SyntaxType.Quotation);
+    private void handleQuotation(Syntax currentRoot) {
+        Syntax quotation = Syntax.create(SyntaxType.QUOTATION);
         stepTokenForward();
 
         handleLineContainer(quotation);
         currentRoot.addChild(quotation);
     }
 
-    private void handleBigHeadlineLine(MutableSyntax currentRoot) {
-        MutableSyntax bigHeadline = Syntax.create(SyntaxType.BigHeadline);
+    private void handleBigHeadlineLine(Syntax currentRoot) {
+        Syntax bigHeadline = Syntax.create(SyntaxType.BIG_HEADLINE);
         stepTokenForward();
 
         handleLineContainer(bigHeadline);
         currentRoot.addChild(bigHeadline);
     }
 
-    private void handleSmallHeadlineLine(MutableSyntax currentRoot) {
-        MutableSyntax smallHeadline = Syntax.create(SyntaxType.SmallHeadline);
+    private void handleSmallHeadlineLine(Syntax currentRoot) {
+        Syntax smallHeadline = Syntax.create(SyntaxType.SMALL_HEADLINE);
         stepTokenForward();
 
 
@@ -122,7 +120,7 @@ public class SyntaxAnalyzer {
         currentRoot.addChild(smallHeadline);
     }
 
-    private void handleLineContainer(MutableSyntax currentRoot) {
+    private void handleLineContainer(Syntax currentRoot) {
 
         Token currentToken = currentToken();
 
@@ -136,7 +134,7 @@ public class SyntaxAnalyzer {
             } else if (Token.Star.equals(currentToken)) {
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
-                currentRoot.addChild(Syntax.createWithContent(SyntaxType.Text, currentToken.getTextValue()));
+                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, currentToken.getTextValue()));
                 stepTokenForward();
             }
 
@@ -144,20 +142,20 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private void handleBold(MutableSyntax currentRoot) {
+    private void handleBold(Syntax currentRoot) {
         isBoldModeActive = true;
         stepTokenForward();
-        MutableSyntax newSyntaxElement = Syntax.create(SyntaxType.Bold);
+        Syntax newSyntaxElement = Syntax.create(SyntaxType.BOLD);
         handleLineContainer(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);
         isBoldModeActive = false;
     }
 
-    private void handleItalic(MutableSyntax currentRoot) {
+    private void handleItalic(Syntax currentRoot) {
         isItalicModeEnabled = true;
         stepTokenForward();
-        MutableSyntax newSyntaxElement = Syntax.create(SyntaxType.Italic);
+        Syntax newSyntaxElement = Syntax.create(SyntaxType.ITALIC);
         handleLineContainer(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);

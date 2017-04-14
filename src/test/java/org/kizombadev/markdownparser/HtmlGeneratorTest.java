@@ -39,32 +39,60 @@ public class HtmlGeneratorTest {
 
     @Test
     public void testBigHeadline() {
-        assertElementWithOneTextChild(SyntaxType.BigHeadline, "h1");
+        assertElementWithOneTextChild(SyntaxType.BIG_HEADLINE, "h1");
     }
 
     @Test
     public void testSmallHeadline() {
-        assertElementWithOneTextChild(SyntaxType.SmallHeadline, "h2");
+        assertElementWithOneTextChild(SyntaxType.SMALL_HEADLINE, "h2");
     }
 
     @Test
     public void testItalic() {
-        assertElementWithOneTextChild(SyntaxType.Italic, "i");
+        assertElementWithOneTextChild(SyntaxType.ITALIC, "i");
     }
 
     @Test
     public void testBold() {
-        assertElementWithOneTextChild(SyntaxType.Bold, "b");
+        assertElementWithOneTextChild(SyntaxType.BOLD, "b");
     }
 
     @Test
     public void testQuotation() {
-        assertElementWithOneTextChild(SyntaxType.Quotation, "blockquote");
+        assertElementWithOneTextChild(SyntaxType.QUOTATION, "blockquote");
+    }
+
+    @Test
+    public void testUnorderedList() {
+        //arrange
+        Syntax fooItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createWithContent(SyntaxType.TEXT, "Foo"));
+        Syntax barItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createWithContent(SyntaxType.TEXT, "Bar"));
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(SyntaxType.UNORDERED_LIST, fooItem, barItem));
+
+        //act
+        String html = generator.parse(root);
+
+        //assert
+        assertThat(html).isEqualTo(HTML_START + "<ul><li>Foo</li><li>Bar</li></ul>" + HTML_END);
+    }
+
+    @Test
+    public void testUnorderedListWithBoldText() {
+        //arrange
+        Syntax boldText = Syntax.createWithChildren(SyntaxType.BOLD, Syntax.createWithContent(SyntaxType.TEXT, "Bold"));
+        Syntax fooItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createWithContent(SyntaxType.TEXT, "Foo"), boldText);
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(SyntaxType.UNORDERED_LIST, fooItem));
+
+        //act
+        String html = generator.parse(root);
+
+        //assert
+        assertThat(html).isEqualTo(HTML_START + "<ul><li>Foo<b>Bold</b></li></ul>" + HTML_END);
     }
 
     private void assertElementWithOneTextChild(SyntaxType type, String htmlTag) {
         //arrange
-        Syntax root = Syntax.createWithChildren(SyntaxType.Root, Syntax.createWithChildren(type, Syntax.createWithContent(SyntaxType.Text, "Foo")));
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(type, Syntax.createWithContent(SyntaxType.TEXT, "Foo")));
 
         //act
         String html = generator.parse(root);
