@@ -22,7 +22,6 @@ package org.kizombadev.markdownparser;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
@@ -168,8 +167,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    @Ignore
-    public void testBug() {
+    public void testBlankBetweenBoldAndItalicug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar, Token.Blank, Token.Star, Token.createTextToken("Bar"), Token.Star));
         assertThat(syntax.getChildren()).hasSize(1);
 
@@ -179,14 +177,15 @@ public class SyntaxAnalyzerTest {
 
         assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
         assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(paragraph.getChildren().get(0)).isTextElementWith(" ");
 
-        assertThat(paragraph.getChildren().get(2)).isSyntaxTypeOf(SyntaxType.BOLD);
+        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" ");
+
+        assertThat(paragraph.getChildren().get(2)).isSyntaxTypeOf(SyntaxType.ITALIC);
         assertThat(paragraph.getChildren().get(2).getChildren().get(0)).isTextElementWith("Bar");
     }
 
     @Test
-    public void testBugBlankInUnorderedList() {
+    public void testBlankInUnorderedListBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.Blank, Token.NewLine, Token.Star, Token.Blank, Token.createTextToken("Bar")));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST);

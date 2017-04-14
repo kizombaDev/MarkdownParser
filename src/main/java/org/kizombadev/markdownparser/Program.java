@@ -24,6 +24,10 @@ package org.kizombadev.markdownparser;
 
 public class Program {
 
+    private Program() {
+        //nothing to do
+    }
+
     public static void main(String[] args) {
 
         try {

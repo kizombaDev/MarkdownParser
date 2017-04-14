@@ -77,7 +77,7 @@ public class SyntaxAnalyzer {
         return root;
     }
 
-    private void handleLineContainer(Syntax currentRoot) {
+    private void handleLine(Syntax currentRoot) {
         skipBlanks();
 
         Token currentToken = currentToken();
@@ -88,11 +88,20 @@ public class SyntaxAnalyzer {
                     (Token.Star.equals(currentToken) && isItalicModeEnabled)) {
                 return;
             } else if (Token.DoubleStar.equals(currentToken)) {
+
+                if (blankCounter != 0) {
+                    currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText()));
+                }
+
                 handleBold(currentRoot);
             } else if (Token.Star.equals(currentToken)) {
+                if (blankCounter != 0) {
+                    currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText()));
+                }
+
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
-                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, addBlanks() + currentToken.getTextValue()));
+                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText() + currentToken.getTextValue()));
                 stepTokenForward();
             } else if (Token.Blank.equals(currentToken)) {
                 stepTokenForward();
@@ -122,7 +131,7 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private String addBlanks() {
+    private String getBlankText() {
 
         StringBuilder blanks = new StringBuilder();
 
@@ -137,7 +146,7 @@ public class SyntaxAnalyzer {
 
     private void handleParagraph(Syntax root) {
         Syntax paragraph = Syntax.create(SyntaxType.PARAGRAPH);
-        handleLineContainer(paragraph);
+        handleLine(paragraph);
         root.addChild(paragraph);
     }
 
@@ -161,7 +170,7 @@ public class SyntaxAnalyzer {
 
     private void handleUnorderedListItem(Syntax unorderedList) {
         Syntax unorderedListItem = Syntax.create(SyntaxType.UNORDERED_LIST_ITEM);
-        handleLineContainer(unorderedListItem);
+        handleLine(unorderedListItem);
         unorderedList.addChild(unorderedListItem);
     }
 
@@ -169,7 +178,7 @@ public class SyntaxAnalyzer {
         Syntax quotation = Syntax.create(SyntaxType.QUOTATION);
         stepTokenForward();
 
-        handleLineContainer(quotation);
+        handleLine(quotation);
         currentRoot.addChild(quotation);
     }
 
@@ -177,7 +186,7 @@ public class SyntaxAnalyzer {
         Syntax bigHeadline = Syntax.create(SyntaxType.BIG_HEADLINE);
         stepTokenForward();
 
-        handleLineContainer(bigHeadline);
+        handleLine(bigHeadline);
         currentRoot.addChild(bigHeadline);
     }
 
@@ -186,7 +195,7 @@ public class SyntaxAnalyzer {
         stepTokenForward();
 
 
-        handleLineContainer(smallHeadline);
+        handleLine(smallHeadline);
         currentRoot.addChild(smallHeadline);
     }
 
@@ -194,7 +203,7 @@ public class SyntaxAnalyzer {
         isBoldModeActive = true;
         stepTokenForward();
         Syntax newSyntaxElement = Syntax.create(SyntaxType.BOLD);
-        handleLineContainer(newSyntaxElement);
+        handleLine(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);
         isBoldModeActive = false;
@@ -204,7 +213,7 @@ public class SyntaxAnalyzer {
         isItalicModeEnabled = true;
         stepTokenForward();
         Syntax newSyntaxElement = Syntax.create(SyntaxType.ITALIC);
-        handleLineContainer(newSyntaxElement);
+        handleLine(newSyntaxElement);
         stepTokenForward();
         currentRoot.addChild(newSyntaxElement);
         isItalicModeEnabled = false;
