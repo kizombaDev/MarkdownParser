@@ -8,12 +8,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Token {
-    public static Token Star = create(Category.STAR);
-    public static Token DoubleStar = create(Category.DOUBLE_STAR);
-    public static Token NumberSign = create(Category.NUMBER_SIGN);
-    public static Token DoubleNumberSign = create(Category.DOUBLE_NUMBER_SIGN);
-    public static Token NewLine = create(Category.NEW_LINE);
-    public static Token GreaterThanSign = create(Category.GREATER_THAN_SIGN);
+    public static final Token Star = create(Category.STAR);
+    public static final Token DoubleStar = create(Category.DOUBLE_STAR);
+    public static final Token NumberSign = create(Category.NUMBER_SIGN);
+    public static final Token DoubleNumberSign = create(Category.DOUBLE_NUMBER_SIGN);
+    public static final Token NewLine = create(Category.NEW_LINE);
+    public static final Token GreaterThanSign = create(Category.GREATER_THAN_SIGN);
     private String value;
     private Category category;
     private Token() {

@@ -16,7 +16,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test() {
+    public void testNumberSignText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo")));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(BigHeadline.class);
@@ -24,7 +24,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test2() {
+    public void testDoubleNumberSignText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleNumberSign, Token.createTextToken("Foo")));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(SmallHeadline.class);
@@ -32,7 +32,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test3() {
+    public void testNumberSignTextNewLineDoubleNumberSingText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo"), Token.NewLine, Token.DoubleNumberSign, Token.createTextToken("Bar")));
         assertThat(syntax.getChildren()).hasSize(2);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(BigHeadline.class);
@@ -42,7 +42,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test4() {
+    public void testNumberSignTextDoubleStartTextDoubleStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo"), Token.DoubleStar, Token.createTextToken("Bar"), Token.DoubleStar));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(BigHeadline.class);
@@ -52,7 +52,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test5() {
+    public void testGreaterThanSignText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.GreaterThanSign, Token.createTextToken("Foo")));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(Quotation.class);
@@ -60,7 +60,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test6() {
+    public void testDoubleStarTextDoubleStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(BoldSyntax.class);
@@ -68,7 +68,7 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
-    public void test7() {
+    public void testStarTextStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.createTextToken("Foo"), Token.Star));
         assertThat(syntax.getChildren()).hasSize(1);
         assertThat(syntax.getChildren().get(0)).isExactlyInstanceOf(ItalicSyntax.class);

@@ -20,22 +20,26 @@ public class SyntaxAnalyzer {
 
         RootSyntax root = new RootSyntax();
 
-        while (currentToken() != null) {
-            if (currentToken().equals(Token.NumberSign)) {
-                handleBigHeadlineLine(root);
-            } else if (currentToken().equals(Token.DoubleNumberSign)) {
-                handleSmallHeadlineLine(root);
-            } else if (currentToken().equals(Token.GreaterThanSign)) {
-                handleQuotation(root);
-            } else if (currentToken().equals(Token.DoubleStar)) {
-                handleBold(root);
-            } else if (currentToken().equals(Token.Star)) {
-                handleItalic(root);
-            }
+        Token currentToken = currentToken();
 
-            if (currentToken() != null && currentToken().equals(Token.NewLine)) {
+
+        while (currentToken != null) {
+
+            if (currentToken.equals(Token.NumberSign)) {
+                handleBigHeadlineLine(root);
+            } else if (currentToken.equals(Token.DoubleNumberSign)) {
+                handleSmallHeadlineLine(root);
+            } else if (currentToken.equals(Token.GreaterThanSign)) {
+                handleQuotation(root);
+            } else if (currentToken.equals(Token.DoubleStar)) {
+                handleBold(root);
+            } else if (currentToken.equals(Token.Star)) {
+                handleItalic(root);
+            } else if (currentToken.equals(Token.NewLine)) {
                 stepTokenForward();
             }
+
+            currentToken = currentToken();
         }
 
         return root;
@@ -71,15 +75,15 @@ public class SyntaxAnalyzer {
         while (currentToken() != null && !currentToken().equals(Token.NewLine)) {
 
             if (currentToken() != null && currentToken().equals(Token.DoubleStar)) {
-                if (!stack.isEmpty() && stack.peek().equals(State.BoldBegin)) {
-                    stack.push(State.BoldEnd);
+                if (!stack.isEmpty() && stack.peek().equals(State.BOLD_BEGIN)) {
+                    stack.push(State.BOLD_END);
                     return;
                 } else {
                     handleBold(currentRoot);
                 }
             } else if (currentToken() != null && currentToken().equals(Token.Star)) {
-                if (!stack.isEmpty() && stack.peek().equals(State.ItalicBegin)) {
-                    stack.push(State.ItalicEnd);
+                if (!stack.isEmpty() && stack.peek().equals(State.ITALIC_BEGIN)) {
+                    stack.push(State.ITALIC_END);
                     return;
                 } else {
                     handleItalic(currentRoot);
@@ -95,11 +99,11 @@ public class SyntaxAnalyzer {
         stepTokenForward();
 
 
-        stack.push(State.BoldBegin);
+        stack.push(State.BOLD_BEGIN);
         TempContainer tempContainer = new TempContainer();
         handleLineContainer(tempContainer);
 
-        if (stack.peek().equals(State.BoldEnd)) {
+        if (stack.peek().equals(State.BOLD_END)) {
             Syntax bold = new BoldSyntax();
 
             for (Syntax child : tempContainer.getChildren()) {
@@ -116,11 +120,11 @@ public class SyntaxAnalyzer {
         stepTokenForward();
 
 
-        stack.push(State.ItalicBegin);
+        stack.push(State.ITALIC_BEGIN);
         TempContainer tempContainer = new TempContainer();
         handleLineContainer(tempContainer);
 
-        if (stack.peek().equals(State.ItalicEnd)) {
+        if (stack.peek().equals(State.ITALIC_END)) {
             Syntax italic = new ItalicSyntax();
 
             for (Syntax child : tempContainer.getChildren()) {
@@ -141,21 +145,13 @@ public class SyntaxAnalyzer {
         return tokens.get(tokenIndex);
     }
 
-    private Token nextToken() {
-        if (tokenIndex + 1 >= tokens.size()) {
-            return null;
-        }
-
-        return tokens.get(tokenIndex + 1);
-    }
-
     private void stepTokenForward() {
         tokenIndex++;
     }
 
     private enum State {
-        BoldBegin,
-        BoldEnd, ItalicBegin, ItalicEnd,
+        BOLD_BEGIN,
+        BOLD_END, ITALIC_BEGIN, ITALIC_END,
 
     }
 }
