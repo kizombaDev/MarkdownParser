@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -21,7 +21,6 @@
 package org.kizombadev.markdownparser;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Token;
@@ -42,10 +41,10 @@ public class LexicalAnalyzer {
     }
 
     @NotNull
-    public ImmutableCollection<Token> parse(final String input) {
+    public ImmutableList<Token> parse(final String input) {
         checkNotNull(input);
 
-        final InputStream tokenStream = InputStream.create(input);
+        final ParserInputStream tokenStream = ParserInputStream.create(input);
 
         while (tokenStream.hasNext()) {
             tokenStream.next();

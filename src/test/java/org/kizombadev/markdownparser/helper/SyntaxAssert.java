@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -28,7 +28,7 @@ import java.util.Objects;
 
 public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
 
-    public SyntaxAssert(Syntax actual) {
+    private SyntaxAssert(Syntax actual) {
         super(actual, SyntaxAssert.class);
     }
 
