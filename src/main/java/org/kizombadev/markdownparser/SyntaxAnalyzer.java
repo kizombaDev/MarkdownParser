@@ -27,16 +27,14 @@ import org.kizombadev.markdownparser.entities.*;
 import org.kizombadev.markdownparser.entities.interfaces.ImmutableSyntax;
 import org.kizombadev.markdownparser.entities.interfaces.MutableSyntax;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 //todo make the sytaxTree Immutable
 
 public class SyntaxAnalyzer {
 
     private ImmutableList<Token> tokens;
     private int tokenIndex = 0;
-    private Deque<State> stack = new ArrayDeque<>();
+    private boolean isBoldModusActive = false;
+    private boolean isItalicModusEnabled = false;
 
     @NotNull
     public static SyntaxAnalyzer create() {
@@ -129,20 +127,14 @@ public class SyntaxAnalyzer {
 
         while (currentToken != null && !currentToken.equals(Token.NewLine)) {
 
-            if (currentToken.equals(Token.DoubleStar)) {
-                if (!stack.isEmpty() && stack.peek().equals(State.BOLD_BEGIN)) {
-                    stack.push(State.BOLD_END);
-                    return;
-                } else {
-                    handleBold(currentRoot);
-                }
+            if (currentToken.equals(Token.DoubleStar) && isBoldModusActive) {
+                break;
+            } else if (currentToken.equals(Token.DoubleStar)) {
+                handleBold(currentRoot);
+            } else if (currentToken.equals(Token.Star) && isItalicModusEnabled) {
+                break;
             } else if (currentToken.equals(Token.Star)) {
-                if (!stack.isEmpty() && stack.peek().equals(State.ITALIC_BEGIN)) {
-                    stack.push(State.ITALIC_END);
-                    return;
-                } else {
-                    handleItalic(currentRoot);
-                }
+                handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
                 currentRoot.addChild(new TextSyntax(currentToken.getTextValue()));
                 stepTokenForward();
@@ -153,32 +145,22 @@ public class SyntaxAnalyzer {
     }
 
     private void handleBold(MutableSyntax currentRoot) {
+        isBoldModusActive = true;
         handleBeginEndToken(State.BOLD_BEGIN, State.BOLD_END, new BoldSyntax(), currentRoot);
+        isBoldModusActive = false;
     }
 
     private void handleItalic(MutableSyntax currentRoot) {
+        isItalicModusEnabled = true;
         handleBeginEndToken(State.ITALIC_BEGIN, State.ITALIC_END, new ItalicSyntax(), currentRoot);
+        isItalicModusEnabled = false;
     }
 
     private void handleBeginEndToken(State beginSate, State endState, MutableSyntax newSyntaxElement, MutableSyntax currentRoot) {
         stepTokenForward();
-
-        stack.push(beginSate);
-        TempContainer tempContainer = new TempContainer();
-        handleLineContainer(tempContainer);
-
-        if (stack.peek().equals(endState)) {
-
-            for (ImmutableSyntax child : tempContainer.getChildren()) {
-                newSyntaxElement.addChild(child);
-            }
-            currentRoot.addChild(newSyntaxElement);
-
-            stack.pop();
-            stack.pop();
-        } else if (stack.peek().equals(beginSate)) {
-            stack.pop();
-        }
+        handleLineContainer(newSyntaxElement);
+        stepTokenForward();
+        currentRoot.addChild(newSyntaxElement);
     }
 
     @Nullable
@@ -186,7 +168,6 @@ public class SyntaxAnalyzer {
         if (tokenIndex >= tokens.size()) {
             return null;
         }
-
         return tokens.get(tokenIndex);
     }
 
@@ -195,7 +176,6 @@ public class SyntaxAnalyzer {
         if (tokenIndex + 1 >= tokens.size()) {
             return null;
         }
-
         return tokens.get(tokenIndex + 1);
     }
 
