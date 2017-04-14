@@ -21,6 +21,7 @@
 package org.kizombadev.markdownparser.entities;
 
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +61,7 @@ public class Syntax {
 
     @NotNull
     public static Syntax create(SyntaxType type) {
-        return createWithChildren(type, null);
+        return createWithChildren(type);
     }
 
     public ImmutableList<Syntax> getChildren() {
@@ -93,13 +94,7 @@ public class Syntax {
 
         Syntax syntax = (Syntax) o;
 
-        if (!children.equals(syntax.children)) {
-            return false;
-        }
-        if (content != null ? !content.equals(syntax.content) : syntax.content != null) {
-            return false;
-        }
-        return type == syntax.type;
+        return Objects.equal(children, syntax.children) && Objects.equal(content, syntax.content) && Objects.equal(type, syntax.type);
     }
 
     @Override

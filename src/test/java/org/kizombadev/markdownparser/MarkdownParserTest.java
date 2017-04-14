@@ -42,6 +42,7 @@ public class MarkdownParserTest {
         assertThat(html).isEqualTo(HTML_START + "<h1>Foo</h1>" + HTML_END);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void test2() throws IOException {
         String marddown = "# 1. Ueberschrift\n" +

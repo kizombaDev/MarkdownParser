@@ -78,7 +78,7 @@ public class SyntaxAnalyzer {
     }
 
     private void handleLineContainer(Syntax currentRoot) {
-        SkipBlanks();
+        skipBlanks();
 
         Token currentToken = currentToken();
 
@@ -113,7 +113,7 @@ public class SyntaxAnalyzer {
         infinityLoopCounter++;
     }
 
-    private void SkipBlanks() {
+    private void skipBlanks() {
         Token currentToken = currentToken();
 
         while (Token.Blank.equals(currentToken)) {
@@ -124,15 +124,15 @@ public class SyntaxAnalyzer {
 
     private String addBlanks() {
 
-        String result = "";
+        StringBuilder blanks = new StringBuilder();
 
         for (int i = 0; i < blankCounter; i++) {
-            result += " ";
+            blanks.append(" ");
         }
 
         blankCounter = 0;
 
-        return result;
+        return blanks.toString();
     }
 
     private void handleParagraph(Syntax root) {
