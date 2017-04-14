@@ -1,21 +1,59 @@
+/*
+ * Marcel Swoboda
+ * Copyright (C) 2017
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 package org.kizombadev.markdownparser.entities;
 
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jetbrains.annotations.NotNull;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Token {
+
+    @NotNull
     public static final Token Star = create(Category.STAR);
+
+    @NotNull
     public static final Token DoubleStar = create(Category.DOUBLE_STAR);
+
+    @NotNull
     public static final Token NumberSign = create(Category.NUMBER_SIGN);
+
+    @NotNull
     public static final Token DoubleNumberSign = create(Category.DOUBLE_NUMBER_SIGN);
+
+    @NotNull
     public static final Token NewLine = create(Category.NEW_LINE);
+
+    @NotNull
     public static final Token GreaterThanSign = create(Category.GREATER_THAN_SIGN);
+
+    @NotNull
+    public static final Token Blank = create(Category.BLANK);
+
     private String value;
     private Category category;
+
     private Token() {
     }
 
@@ -80,6 +118,7 @@ public class Token {
         DOUBLE_STAR,
         NUMBER_SIGN,
         NEW_LINE,
+        BLANK,
         GREATER_THAN_SIGN
     }
 }

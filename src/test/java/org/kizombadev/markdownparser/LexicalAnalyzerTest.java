@@ -1,3 +1,23 @@
+/*
+ * Marcel Swoboda
+ * Copyright (C) 2017
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 package org.kizombadev.markdownparser;
 
 
@@ -13,8 +33,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class LexicalAnalyzerTest {
     @Rule
     public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
+    private final String newLine = System.lineSeparator();
     private LexicalAnalyzer underTest;
-    private String newLine = System.lineSeparator();
 
     @Before
     public void Init() {
@@ -33,7 +53,7 @@ public class LexicalAnalyzerTest {
 
     @Test
     public void TestMethod3() {
-        assertThat(underTest.parse("# ##")).containsSequence(Token.NumberSign, Token.createTextToken(" "), Token.DoubleNumberSign);
+        assertThat(underTest.parse("# ##")).containsSequence(Token.NumberSign, Token.Blank, Token.DoubleNumberSign);
     }
 
     @Test
@@ -68,18 +88,18 @@ public class LexicalAnalyzerTest {
 
     @Test
     public void TestMethod10() {
-        assertThat(underTest.parse(" #")).containsSequence(Token.createTextToken(" "), Token.NumberSign);
+        assertThat(underTest.parse(" #")).containsSequence(Token.Blank, Token.NumberSign);
     }
 
     @Test
     public void TestMethod11() {
-        assertThat(underTest.parse("# Foo")).containsSequence(Token.NumberSign, Token.createTextToken(" Foo"));
+        assertThat(underTest.parse("# Foo")).containsSequence(Token.NumberSign, Token.Blank, Token.createTextToken("Foo"));
     }
 
     @Test
     public void TestMethod12() {
         assertThat(underTest.parse("# *Foo*")).containsSequence(Token.NumberSign,
-                Token.createTextToken(" "),
+                Token.Blank,
                 Token.Star,
                 Token.createTextToken("Foo"),
                 Token.Star);
@@ -91,58 +111,62 @@ public class LexicalAnalyzerTest {
                 Token.Star,
                 Token.createTextToken("Foo"),
                 Token.Star,
-                Token.createTextToken(" "),
+                Token.Blank,
                 Token.DoubleStar,
                 Token.createTextToken("Bar"),
                 Token.DoubleStar);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void test() {
-        String markdown = "#Das ist eine h1-Uberschrift\n" +
+        String markdown = "#h1-Uberschrift\n" +
                 "\n" +
-                "##Das ist eine h2-Uberschrift\n" +
+                "##h2-Uberschrift\n" +
                 "\n" +
-                "*Erster Punkt\n" +
-                "*Zweiter Punkt\n" +
+                "* ErsterPunkt\n" +
+                "* ZweiterPunkt\n" +
                 "\n" +
-                "*Ein neuer Punkt\n" +
+                "* NeuerPunkt\n" +
                 "\n" +
-                "**Das hier ist Fett**\n" +
-                "*Das ist ein kursiver Text*\n" +
+                "**Fett**\n" +
+                "*KursiverText*\n" +
                 "\n" +
-                ">Das ist mein Zitat";
+                ">Zitat";
 
         ImmutableList<Token> expectedTokens = ImmutableList.copyOf(new Token[]{Token.NumberSign,
-                Token.createTextToken("Das ist eine h1-Uberschrift"),
+                Token.createTextToken("h1-Uberschrift"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.DoubleNumberSign,
-                Token.createTextToken("Das ist eine h2-Uberschrift"),
+                Token.createTextToken("h2-Uberschrift"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Erster Punkt"),
+                Token.Blank,
+                Token.createTextToken("ErsterPunkt"),
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Zweiter Punkt"),
+                Token.Blank,
+                Token.createTextToken("ZweiterPunkt"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Ein neuer Punkt"),
+                Token.Blank,
+                Token.createTextToken("NeuerPunkt"),
                 Token.NewLine,
                 Token.NewLine,
                 Token.DoubleStar,
-                Token.createTextToken("Das hier ist Fett"),
+                Token.createTextToken("Fett"),
                 Token.DoubleStar,
                 Token.NewLine,
                 Token.Star,
-                Token.createTextToken("Das ist ein kursiver Text"),
+                Token.createTextToken("KursiverText"),
                 Token.Star,
                 Token.NewLine,
                 Token.NewLine,
                 Token.GreaterThanSign,
-                Token.createTextToken("Das ist mein Zitat")});
+                Token.createTextToken("Zitat")});
 
         ImmutableList<Token> actualTokens = underTest.parse(markdown).asList();
 
