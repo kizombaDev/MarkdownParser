@@ -22,6 +22,7 @@ package org.kizombadev.markdownparser;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
@@ -164,5 +165,34 @@ public class SyntaxAnalyzerTest {
         assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
         assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
         assertThat(paragraph.getChildren().get(1)).isTextElementWith(" Bar");
+    }
+
+    @Test
+    @Ignore
+    public void testBug() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar, Token.Blank, Token.Star, Token.createTextToken("Bar"), Token.Star));
+        assertThat(syntax.getChildren()).hasSize(1);
+
+        Syntax paragraph = syntax.getChildren().get(0);
+        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(paragraph.getChildren()).hasSize(3);
+
+        assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
+        assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(paragraph.getChildren().get(0)).isTextElementWith(" ");
+
+        assertThat(paragraph.getChildren().get(2)).isSyntaxTypeOf(SyntaxType.BOLD);
+        assertThat(paragraph.getChildren().get(2).getChildren().get(0)).isTextElementWith("Bar");
+    }
+
+    @Test
+    public void testBugBlankInUnorderedList() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.Blank, Token.createTextToken("Foo"), Token.Blank, Token.NewLine, Token.Star, Token.Blank, Token.createTextToken("Bar")));
+        assertThat(syntax.getChildren()).hasSize(1);
+        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax.getChildren().get(0).getChildren().get(1)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
+        assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
     }
 }

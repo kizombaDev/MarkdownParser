@@ -21,7 +21,6 @@
 package org.kizombadev.markdownparser.entities;
 
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,7 +82,7 @@ public class Syntax {
         return type;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -103,5 +102,5 @@ public class Syntax {
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + type.hashCode();
         return result;
-    }
+    }*/
 }

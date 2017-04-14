@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -39,6 +39,16 @@ public class LexicalAnalyzerTest {
     @Before
     public void Init() {
         underTest = LexicalAnalyzer.create();
+    }
+
+    @Test
+    public void testWindowsNewLine() {
+        assertThat(underTest.parse("\r\n")).containsOnly(Token.NewLine);
+    }
+
+    @Test
+    public void testLinuxNewLine() {
+        assertThat(underTest.parse("\n")).containsOnly(Token.NewLine);
     }
 
     @Test

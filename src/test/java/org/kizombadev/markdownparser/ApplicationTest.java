@@ -1,4 +1,3 @@
-
 /*
  * Marcel Swoboda
  * Copyright (C) 2017
@@ -21,16 +20,29 @@
 
 package org.kizombadev.markdownparser;
 
+import org.junit.Ignore;
+import org.junit.Test;
 
-public class Program {
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
-    public static void main(String[] args) {
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
-        try {
-            new Application().execute(args);
+public class ApplicationTest {
+    @Test
+    @Ignore
+    public void test() {
+        PrintStream out = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setErr(printStream);
 
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        new Application().execute(null);
+
+        String console = new String(outputStream.toByteArray());
+
+        assertThat(console).isNotEmpty();
+
+        System.setOut(out);
     }
 }

@@ -152,6 +152,7 @@ public class SyntaxAnalyzer {
 
             if (Token.NewLine.equals(currentToken())) {
                 stepTokenForward();
+                blankCounter = 0;
             }
         }
 
