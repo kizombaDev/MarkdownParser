@@ -9,49 +9,79 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class TokenTest {
 
     @Test
-    public void testCategory() {
-        Token underTest = Token.create(Token.Category.NEW_LINE);
-        assertThat(underTest.getCategory()).isEqualTo(Token.Category.NEW_LINE);
+    public void testNewLineToken() {
+        Token underTest = Token.NewLine;
+        assertThat(underTest).isEqualTo(Token.NewLine);
     }
 
     @Test
-    public void testValue() {
-        Token underTest = Token.createText("foo");
-        assertThat(underTest.getCategory()).isEqualTo(Token.Category.TEXT);
+    public void testStarToken() {
+        Token underTest = Token.Star;
+        assertThat(underTest).isEqualTo(Token.Star);
+    }
+
+    @Test
+    public void testDoubleStarToken() {
+        Token underTest = Token.DoubleStar;
+        assertThat(underTest).isEqualTo(Token.DoubleStar);
+    }
+
+    @Test
+    public void testNumberSignToken() {
+        Token underTest = Token.NumberSign;
+        assertThat(underTest).isEqualTo(Token.NumberSign);
+    }
+
+    @Test
+    public void testDoubleNumberSignToken() {
+        Token underTest = Token.DoubleNumberSign;
+        assertThat(underTest).isEqualTo(Token.DoubleNumberSign);
+    }
+
+    @Test
+    public void testGreaterThanSignToken() {
+        Token underTest = Token.GreaterThanSign;
+        assertThat(underTest).isEqualTo(Token.GreaterThanSign);
+    }
+
+    @Test
+    public void testTextToken() {
+        Token underTest = Token.createTextToken("foo");
+        assertThat(underTest.isTextToken()).isTrue();
         assertThat(underTest.getValue()).isEqualTo("foo");
     }
 
     @Test
-    public void testEqualsCategoryWithTwoEqualTokens() {
-        Token starToken = Token.create(Token.Category.STAR);
-        Token doubleStarToken = Token.create(Token.Category.DOUBLE_STAR);
+    public void testEqualsCategoryWithTwoDifferentTokens() {
+        Token starToken = Token.Star;
+        Token doubleStarToken = Token.DoubleStar;
         Assert.assertNotEquals(starToken, doubleStarToken);
     }
 
     @Test
-    public void testEqualsCategoryWithTwoDifferentTokens() {
-        Token starToken = Token.create(Token.Category.STAR);
-        Token starTokenTwo = Token.create(Token.Category.STAR);
+    public void testEqualsCategoryWithTwoEqualTokens() {
+        Token starToken = Token.Star;
+        Token starTokenTwo = Token.Star;
         Assert.assertEquals(starToken, starTokenTwo);
     }
 
     @Test
     public void testEqualsValueWithTwoEqualValues() {
-        Token tokenFoo = Token.createText("foo");
-        Token tokenBar = Token.createText("bar");
+        Token tokenFoo = Token.createTextToken("foo");
+        Token tokenBar = Token.createTextToken("bar");
         Assert.assertNotEquals(tokenFoo, tokenBar);
     }
 
     @Test
     public void testEqualsValueWithTwoDifferentValues() {
-        Token tokenFoo = Token.createText("foo");
-        Token tokenFooTwo = Token.createText("foo");
+        Token tokenFoo = Token.createTextToken("foo");
+        Token tokenFooTwo = Token.createTextToken("foo");
         Assert.assertEquals(tokenFoo, tokenFooTwo);
     }
 
     @Test
     public void testToString() {
-        Token tokenFoo = Token.createText("foo");
+        Token tokenFoo = Token.createTextToken("foo");
         assertThat(tokenFoo.toString()).isEqualTo("Token{value=foo, category=TEXT}");
     }
 }

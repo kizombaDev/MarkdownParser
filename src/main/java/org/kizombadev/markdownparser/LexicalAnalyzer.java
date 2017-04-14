@@ -29,28 +29,28 @@ public class LexicalAnalyzer {
 
             if (tokenStream.current() == '\r' && tokenStream.hasNext() && tokenStream.showNext() == '\n') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NEW_LINE));
+                tokens.add(Token.NewLine);
                 tokenStream.next();
             } else if (tokenStream.current() == '\n') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NEW_LINE));
+                tokens.add(Token.NewLine);
             } else if (tokenStream.current() == '#' && tokenStream.hasNext() && tokenStream.showNext() == '#') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
+                tokens.add(Token.DoubleNumberSign);
                 tokenStream.next();
             } else if (tokenStream.current() == '#') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.NUMBER_SIGN));
+                tokens.add(Token.NumberSign);
             } else if (tokenStream.current() == '*' && tokenStream.hasNext() && tokenStream.showNext() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.DOUBLE_STAR));
+                tokens.add(Token.DoubleStar);
                 tokenStream.next();
             } else if (tokenStream.current() == '*') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.STAR));
+                tokens.add(Token.Star);
             } else if (tokenStream.current() == '>') {
                 handleEndOfText();
-                tokens.add(Token.create(Token.Category.GREATER_THAN_SIGN));
+                tokens.add(Token.GreaterThanSign);
             } else {
                 text.append(tokenStream.current());
             }
@@ -72,7 +72,7 @@ public class LexicalAnalyzer {
             return;
         }
 
-        tokens.add(Token.createText(currentText));
+        tokens.add(Token.createTextToken(currentText));
         text = new StringBuilder();
     }
 }

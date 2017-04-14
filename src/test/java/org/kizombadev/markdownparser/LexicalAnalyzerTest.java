@@ -23,78 +23,78 @@ public class LexicalAnalyzerTest {
 
     @Test
     public void TestMethod1() {
-        assertThat(underTest.parse("#")).containsOnly(Token.create(Token.Category.NUMBER_SIGN));
+        assertThat(underTest.parse("#")).containsOnly(Token.NumberSign);
     }
 
     @Test
     public void TestMethod2() {
-        assertThat(underTest.parse("##")).containsOnly(Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
+        assertThat(underTest.parse("##")).containsOnly(Token.DoubleNumberSign);
     }
 
     @Test
     public void TestMethod3() {
-        assertThat(underTest.parse("# ##")).containsSequence(Token.create(Token.Category.NUMBER_SIGN), Token.createText(" "), Token.create(Token.Category.DOUBLE_NUMBER_SIGN));
+        assertThat(underTest.parse("# ##")).containsSequence(Token.NumberSign, Token.createTextToken(" "), Token.DoubleNumberSign);
     }
 
     @Test
     public void TestMethod4() {
-        assertThat(underTest.parse("*")).containsOnly(Token.create(Token.Category.STAR));
+        assertThat(underTest.parse("*")).containsOnly(Token.Star);
     }
 
     @Test
     public void TestMethod5() {
-        assertThat(underTest.parse("**")).containsOnly(Token.create(Token.Category.DOUBLE_STAR));
+        assertThat(underTest.parse("**")).containsOnly(Token.DoubleStar);
     }
 
     @Test
     public void TestMethod6() {
-        assertThat(underTest.parse(newLine)).containsOnly(Token.create(Token.Category.NEW_LINE));
+        assertThat(underTest.parse(newLine)).containsOnly(Token.NewLine);
     }
 
     @Test
     public void TestMethod7() {
-        assertThat(underTest.parse(newLine + newLine)).containsSequence(Token.create(Token.Category.NEW_LINE), Token.create(Token.Category.NEW_LINE));
+        assertThat(underTest.parse(newLine + newLine)).containsSequence(Token.NewLine, Token.NewLine);
     }
 
     @Test
     public void TestMethod8() {
-        assertThat(underTest.parse(">")).containsOnly(Token.create(Token.Category.GREATER_THAN_SIGN));
+        assertThat(underTest.parse(">")).containsOnly(Token.GreaterThanSign);
     }
 
     @Test
     public void TestMethod9() {
-        assertThat(underTest.parse("42")).containsOnly(Token.createText("42"));
+        assertThat(underTest.parse("42")).containsOnly(Token.createTextToken("42"));
     }
 
     @Test
     public void TestMethod10() {
-        assertThat(underTest.parse(" #")).containsSequence(Token.createText(" "), Token.create(Token.Category.NUMBER_SIGN));
+        assertThat(underTest.parse(" #")).containsSequence(Token.createTextToken(" "), Token.NumberSign);
     }
 
     @Test
     public void TestMethod11() {
-        assertThat(underTest.parse("# Foo")).containsSequence(Token.create(Token.Category.NUMBER_SIGN), Token.createText(" Foo"));
+        assertThat(underTest.parse("# Foo")).containsSequence(Token.NumberSign, Token.createTextToken(" Foo"));
     }
 
     @Test
     public void TestMethod12() {
-        assertThat(underTest.parse("# *Foo*")).containsSequence(Token.create(Token.Category.NUMBER_SIGN),
-                Token.createText(" "),
-                Token.create(Token.Category.STAR),
-                Token.createText("Foo"),
-                Token.create(Token.Category.STAR));
+        assertThat(underTest.parse("# *Foo*")).containsSequence(Token.NumberSign,
+                Token.createTextToken(" "),
+                Token.Star,
+                Token.createTextToken("Foo"),
+                Token.Star);
     }
 
     @Test
     public void TestMethod13() {
         assertThat(underTest.parse("*Foo* **Bar**")).containsSequence(
-                Token.create(Token.Category.STAR),
-                Token.createText("Foo"),
-                Token.create(Token.Category.STAR),
-                Token.createText(" "),
-                Token.create(Token.Category.DOUBLE_STAR),
-                Token.createText("Bar"),
-                Token.create(Token.Category.DOUBLE_STAR));
+                Token.Star,
+                Token.createTextToken("Foo"),
+                Token.Star,
+                Token.createTextToken(" "),
+                Token.DoubleStar,
+                Token.createTextToken("Bar"),
+                Token.DoubleStar);
     }
 
     @Test
@@ -113,36 +113,36 @@ public class LexicalAnalyzerTest {
                 "\n" +
                 ">Das ist mein Zitat";
 
-        ImmutableList<Token> expectedTokens = ImmutableList.copyOf(new Token[]{Token.create(Token.Category.NUMBER_SIGN),
-                Token.createText("Das ist eine h1-Uberschrift"),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.DOUBLE_NUMBER_SIGN),
-                Token.createText("Das ist eine h2-Uberschrift"),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.STAR),
-                Token.createText("Erster Punkt"),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.STAR),
-                Token.createText("Zweiter Punkt"),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.STAR),
-                Token.createText("Ein neuer Punkt"),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.DOUBLE_STAR),
-                Token.createText("Das hier ist Fett"),
-                Token.create(Token.Category.DOUBLE_STAR),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.STAR),
-                Token.createText("Das ist ein kursiver Text"),
-                Token.create(Token.Category.STAR),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.NEW_LINE),
-                Token.create(Token.Category.GREATER_THAN_SIGN),
-                Token.createText("Das ist mein Zitat")});
+        ImmutableList<Token> expectedTokens = ImmutableList.copyOf(new Token[]{Token.NumberSign,
+                Token.createTextToken("Das ist eine h1-Uberschrift"),
+                Token.NewLine,
+                Token.NewLine,
+                Token.DoubleNumberSign,
+                Token.createTextToken("Das ist eine h2-Uberschrift"),
+                Token.NewLine,
+                Token.NewLine,
+                Token.Star,
+                Token.createTextToken("Erster Punkt"),
+                Token.NewLine,
+                Token.Star,
+                Token.createTextToken("Zweiter Punkt"),
+                Token.NewLine,
+                Token.NewLine,
+                Token.Star,
+                Token.createTextToken("Ein neuer Punkt"),
+                Token.NewLine,
+                Token.NewLine,
+                Token.DoubleStar,
+                Token.createTextToken("Das hier ist Fett"),
+                Token.DoubleStar,
+                Token.NewLine,
+                Token.Star,
+                Token.createTextToken("Das ist ein kursiver Text"),
+                Token.Star,
+                Token.NewLine,
+                Token.NewLine,
+                Token.GreaterThanSign,
+                Token.createTextToken("Das ist mein Zitat")});
 
         ImmutableList<Token> actualTokens = underTest.parse(markdown).asList();
 

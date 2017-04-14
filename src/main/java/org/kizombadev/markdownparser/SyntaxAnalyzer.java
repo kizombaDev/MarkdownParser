@@ -9,7 +9,7 @@ public class SyntaxAnalyzer {
 
     private ImmutableList<Token> tokens;
     private int tokenIndex = 0;
-    private Stack<Token.Category> stack = new Stack<>();
+    private Stack<State> stack = new Stack<>();
 
     public static SyntaxAnalyzer create() {
         return new SyntaxAnalyzer();
@@ -21,19 +21,21 @@ public class SyntaxAnalyzer {
         RootSyntax root = new RootSyntax();
 
         while (currentToken() != null) {
-            if (currentToken().getCategory().equals(Token.Category.NUMBER_SIGN)) {
+            if (currentToken().equals(Token.NumberSign)) {
                 handleBigHeadlineLine(root);
-            } else if (currentToken().getCategory().equals(Token.Category.DOUBLE_NUMBER_SIGN)) {
+            } else if (currentToken().equals(Token.DoubleNumberSign)) {
                 handleSmallHeadlineLine(root);
-            } else if (currentToken().getCategory().equals(Token.Category.GREATER_THAN_SIGN)) {
+            } else if (currentToken().equals(Token.GreaterThanSign)) {
                 handleQuotation(root);
+            } else if (currentToken().equals(Token.DoubleStar)) {
+                handleBold(root);
+            } else if (currentToken().equals(Token.Star)) {
+                handleItalic(root);
             }
 
-            if (currentToken() != null && currentToken().getCategory().equals(Token.Category.NEW_LINE)) {
+            if (currentToken() != null && currentToken().equals(Token.NewLine)) {
                 stepTokenForward();
             }
-
-
         }
 
         return root;
@@ -66,11 +68,23 @@ public class SyntaxAnalyzer {
 
     private void handleLineContainer(Syntax currentRoot) {
 
-        while (currentToken() != null && !currentToken().getCategory().equals(Token.Category.NEW_LINE)) {
+        while (currentToken() != null && !currentToken().equals(Token.NewLine)) {
 
-            if (currentToken() != null && currentToken().getCategory().equals(Token.Category.DOUBLE_STAR)) {
-                handleBold(currentRoot);
-            } else if (currentToken() != null && currentToken().getCategory().equals(Token.Category.TEXT)) {
+            if (currentToken() != null && currentToken().equals(Token.DoubleStar)) {
+                if (!stack.isEmpty() && stack.peek().equals(State.BoldBegin)) {
+                    stack.push(State.BoldEnd);
+                    return;
+                } else {
+                    handleBold(currentRoot);
+                }
+            } else if (currentToken() != null && currentToken().equals(Token.Star)) {
+                if (!stack.isEmpty() && stack.peek().equals(State.ItalicBegin)) {
+                    stack.push(State.ItalicEnd);
+                    return;
+                } else {
+                    handleItalic(currentRoot);
+                }
+            } else if (currentToken() != null && currentToken().isTextToken()) {
                 currentRoot.addChild(new TextSyntax());
                 stepTokenForward();
             }
@@ -80,23 +94,43 @@ public class SyntaxAnalyzer {
     private void handleBold(Syntax currentRoot) {
         stepTokenForward();
 
-        TempContainer tempContainer = null;
 
-        if (!stack.isEmpty() && stack.peek().equals(Token.Category.DOUBLE_STAR)) {
-            stack.pop();
+        stack.push(State.BoldBegin);
+        TempContainer tempContainer = new TempContainer();
+        handleLineContainer(tempContainer);
+
+        if (stack.peek().equals(State.BoldEnd)) {
             Syntax bold = new BoldSyntax();
 
             for (Syntax child : tempContainer.getChildren()) {
                 bold.addChild(child);
             }
             currentRoot.addChild(bold);
-        } else {
-            stack.push(Token.Category.DOUBLE_STAR);
-            tempContainer = new TempContainer();
-            handleLineContainer(tempContainer);
+
+            stack.pop();
+            stack.pop();
         }
+    }
+
+    private void handleItalic(Syntax currentRoot) {
+        stepTokenForward();
 
 
+        stack.push(State.ItalicBegin);
+        TempContainer tempContainer = new TempContainer();
+        handleLineContainer(tempContainer);
+
+        if (stack.peek().equals(State.ItalicEnd)) {
+            Syntax italic = new ItalicSyntax();
+
+            for (Syntax child : tempContainer.getChildren()) {
+                italic.addChild(child);
+            }
+            currentRoot.addChild(italic);
+
+            stack.pop();
+            stack.pop();
+        }
     }
 
     private Token currentToken() {
@@ -117,5 +151,11 @@ public class SyntaxAnalyzer {
 
     private void stepTokenForward() {
         tokenIndex++;
+    }
+
+    private enum State {
+        BoldBegin,
+        BoldEnd, ItalicBegin, ItalicEnd,
+
     }
 }

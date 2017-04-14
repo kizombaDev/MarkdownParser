@@ -8,19 +8,24 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Token {
+    public static Token Star = create(Category.STAR);
+    public static Token DoubleStar = create(Category.DOUBLE_STAR);
+    public static Token NumberSign = create(Category.NUMBER_SIGN);
+    public static Token DoubleNumberSign = create(Category.DOUBLE_NUMBER_SIGN);
+    public static Token NewLine = create(Category.NEW_LINE);
+    public static Token GreaterThanSign = create(Category.GREATER_THAN_SIGN);
     private String value;
     private Category category;
-
     private Token() {
     }
 
-    public static Token create(Category type) {
-        checkArgument(type != Category.TEXT, "Please use the method createText if you want create a text token");
+    private static Token create(Category type) {
+        checkArgument(type != Category.TEXT, "Please use the method createTextToken if you want create a text token");
 
         return create(type, null);
     }
 
-    public static Token createText(String value) {
+    public static Token createTextToken(String value) {
         checkNotNull(value);
         return create(Category.TEXT, value);
     }
@@ -64,11 +69,15 @@ public class Token {
         return value;
     }
 
-    public Category getCategory() {
+    public boolean isTextToken() {
+        return category == Category.TEXT;
+    }
+
+    private Category getCategory() {
         return category;
     }
 
-    public enum Category {
+    private enum Category {
         STAR,
         TEXT,
         DOUBLE_NUMBER_SIGN,
