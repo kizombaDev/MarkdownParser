@@ -22,7 +22,11 @@
 package org.kizombadev.markdownparser;
 
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 public class Program {
+    private final static Logger log = Logger.getLogger(Program.class);
 
     private Program() {
         //nothing to do
@@ -31,10 +35,11 @@ public class Program {
     public static void main(String[] args) {
 
         try {
+            BasicConfigurator.configure();
             new Application().execute(args);
 
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Unknown Error", e);
         }
     }
 }

@@ -28,8 +28,6 @@ import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.Token;
 import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 
-//todo make the syntaxTree Immutable
-
 public class SyntaxAnalyzer {
 
     private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
@@ -88,17 +86,10 @@ public class SyntaxAnalyzer {
                     (Token.Star.equals(currentToken) && isItalicModeEnabled)) {
                 return;
             } else if (Token.DoubleStar.equals(currentToken)) {
-
-                if (blankCounter != 0) {
-                    currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText()));
-                }
-
+                handleBlank(currentRoot);
                 handleBold(currentRoot);
             } else if (Token.Star.equals(currentToken)) {
-                if (blankCounter != 0) {
-                    currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText()));
-                }
-
+                handleBlank(currentRoot);
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
                 currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText() + currentToken.getTextValue()));
@@ -111,6 +102,12 @@ public class SyntaxAnalyzer {
             checkInfinityLoop();
 
             currentToken = currentToken();
+        }
+    }
+
+    private void handleBlank(Syntax currentRoot) {
+        if (blankCounter != 0) {
+            currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText()));
         }
     }
 
