@@ -41,23 +41,4 @@ public class MarkdownParserTest {
         String html = new String(outputStream.toByteArray());
         assertThat(html).isEqualTo(HTML_START + "<h1>Foo</h1>" + HTML_END);
     }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    @Test
-    public void test2() throws IOException {
-        String marddown = "# 1. Ueberschrift\n" +
-                "## 2. Ueberschrift\n" +
-                "**Fetter Text** Test \n" +
-                "*Kursiver Text* Test\n" +
-                "> Das ist ein Zitat\n" +
-                "* Punkt 1 \n" +
-                "* Punkt 2\n" +
-                "* Punkt 3 **Fett** *Kusiv*";
-
-        InputStream inputStream = IOUtils.toInputStream(marddown);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        MarkdownParser.create().parse(inputStream, outputStream);
-
-        String html = new String(outputStream.toByteArray());
-    }
 }

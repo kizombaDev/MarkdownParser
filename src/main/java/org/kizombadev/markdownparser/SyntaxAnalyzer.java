@@ -35,7 +35,7 @@ public class SyntaxAnalyzer {
     private int tokenIndex = 0;
     private boolean isBoldModeActive = false;
     private boolean isItalicModeEnabled = false;
-    private int blankCounter = 0;
+    private boolean shouldInsertBlank = false;
     private int infinityLoopCounter = 0;
 
     @NotNull
@@ -62,7 +62,7 @@ public class SyntaxAnalyzer {
                 handleUnorderedList(root);
             } else if (Token.NewLine.equals(currentToken)) {
                 stepTokenForward();
-                blankCounter = 0;
+                shouldInsertBlank = false;
             } else {
                 handleParagraph(root);
             }
@@ -92,11 +92,12 @@ public class SyntaxAnalyzer {
                 handleBlank(currentRoot);
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
-                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText() + currentToken.getTextValue()));
+                handleBlank(currentRoot);
+                currentRoot.addChild(Syntax.createTextSyntax(currentToken.getTextValue()));
                 stepTokenForward();
             } else if (Token.Blank.equals(currentToken)) {
                 stepTokenForward();
-                blankCounter++;
+                shouldInsertBlank = true;
             }
 
             checkInfinityLoop();
@@ -106,9 +107,10 @@ public class SyntaxAnalyzer {
     }
 
     private void handleBlank(Syntax currentRoot) {
-        if (blankCounter != 0) {
-            currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, getBlankText()));
+        if (shouldInsertBlank) {
+            currentRoot.addChild(Syntax.createTextSyntax(" "));
         }
+        shouldInsertBlank = false;
     }
 
     private void checkInfinityLoop() {
@@ -128,19 +130,6 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private String getBlankText() {
-
-        StringBuilder blanks = new StringBuilder();
-
-        for (int i = 0; i < blankCounter; i++) {
-            blanks.append(" ");
-        }
-
-        blankCounter = 0;
-
-        return blanks.toString();
-    }
-
     private void handleParagraph(Syntax root) {
         Syntax paragraph = Syntax.create(SyntaxType.PARAGRAPH);
         handleLine(paragraph);
@@ -158,7 +147,7 @@ public class SyntaxAnalyzer {
 
             if (Token.NewLine.equals(currentToken())) {
                 stepTokenForward();
-                blankCounter = 0;
+                shouldInsertBlank = false;
             }
         }
 

@@ -22,6 +22,7 @@ package org.kizombadev.markdownparser;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
@@ -159,15 +160,16 @@ public class SyntaxAnalyzerTest {
 
         Syntax paragraph = syntax.getChildren().get(0);
         assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
-        assertThat(paragraph.getChildren()).hasSize(2);
+        assertThat(paragraph.getChildren()).hasSize(3);
 
         assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
         assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
-        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" Bar");
+        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" ");
+        assertThat(paragraph.getChildren().get(2)).isTextElementWith("Bar");
     }
 
     @Test
-    public void testBlankBetweenBoldAndItalicug() {
+    public void testBlankBetweenBoldAndItalicBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar, Token.Blank, Token.Star, Token.createTextToken("Bar"), Token.Star));
         assertThat(syntax.getChildren()).hasSize(1);
 
@@ -194,4 +196,40 @@ public class SyntaxAnalyzerTest {
         assertThat(syntax.getChildren().get(0).getChildren().get(1)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
         assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
     }
+
+    @Test
+    public void testMutliBlanksBug() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.Blank, Token.Blank, Token.createTextToken("Bar")));
+        assertThat(syntax.getChildren()).hasSize(1);
+        Syntax paragraph = syntax.getChildren().get(0);
+        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(paragraph.getChildren()).hasSize(3);
+        assertThat(paragraph.getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" ");
+        assertThat(paragraph.getChildren().get(2)).isTextElementWith("Bar");
+
+    }
+
+    @Test
+    @Ignore
+    public void testBoldAndItalicBug() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.Star, Token.createTextToken("Foo"), Token.DoubleStar, Token.Star));
+        assertThat(syntax.getChildren()).hasSize(1);
+
+        Syntax paragraph = syntax.getChildren().get(0);
+        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+
+        assertThat(paragraph.getChildren()).hasSize(1);
+        assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
+
+        assertThat(paragraph.getChildren().get(0).getChildren()).hasSize(1);
+        assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
+
+        assertThat(paragraph.getChildren().get(0).getChildren().get(0).getChildren()).hasSize(1);
+        assertThat(paragraph.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+    }
+
+    //todo multi line
+    //todo zweit zitate nacheinander
+    //remove mulit blanks
 }

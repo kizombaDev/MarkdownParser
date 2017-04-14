@@ -21,23 +21,7 @@
 package org.kizombadev.markdownparser.exceptions;
 
 public class UnknownSyntaxTypeException extends MarkdownParserException {
-    public UnknownSyntaxTypeException() {
-        //nothing to do
-    }
-
     public UnknownSyntaxTypeException(String message) {
         super(message);
-    }
-
-    public UnknownSyntaxTypeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public UnknownSyntaxTypeException(Throwable cause) {
-        super(cause);
-    }
-
-    public UnknownSyntaxTypeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

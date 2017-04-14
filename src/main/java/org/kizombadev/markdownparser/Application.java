@@ -27,9 +27,9 @@ import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 import java.io.*;
 
 public class Application {
-    public static final String OUTPUT_OPTION = "output";
-    public static final String INPUT_OPTION = "input";
-    public static final String HELP_OPTION = "help";
+    private static final String OUTPUT_OPTION = "output";
+    private static final String INPUT_OPTION = "input";
+    private static final String HELP_OPTION = "help";
     private final static Logger log = Logger.getLogger(Application.class);
     private final Options options = new Options();
 

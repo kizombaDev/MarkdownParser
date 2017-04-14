@@ -49,12 +49,12 @@ public class Syntax {
     }
 
     @NotNull
-    public static Syntax createWithContent(SyntaxType type, String content) {
-        checkNotNull(type);
+    public static Syntax createTextSyntax(String content) {
+        checkNotNull(SyntaxType.TEXT);
 
         Syntax syntax = new Syntax();
         syntax.content = content;
-        syntax.type = type;
+        syntax.type = SyntaxType.TEXT;
         return syntax;
     }
 

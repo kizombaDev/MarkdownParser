@@ -66,8 +66,8 @@ public class HtmlGeneratorTest {
     @Test
     public void testUnorderedList() {
         //arrange
-        Syntax fooItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createWithContent(SyntaxType.TEXT, "Foo"));
-        Syntax barItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createWithContent(SyntaxType.TEXT, "Bar"));
+        Syntax fooItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createTextSyntax("Foo"));
+        Syntax barItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createTextSyntax("Bar"));
         Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(SyntaxType.UNORDERED_LIST, fooItem, barItem));
 
         //act
@@ -80,8 +80,8 @@ public class HtmlGeneratorTest {
     @Test
     public void testUnorderedListWithBoldText() {
         //arrange
-        Syntax boldText = Syntax.createWithChildren(SyntaxType.BOLD, Syntax.createWithContent(SyntaxType.TEXT, "Bold"));
-        Syntax fooItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createWithContent(SyntaxType.TEXT, "Foo"), boldText);
+        Syntax boldText = Syntax.createWithChildren(SyntaxType.BOLD, Syntax.createTextSyntax("Bold"));
+        Syntax fooItem = Syntax.createWithChildren(SyntaxType.UNORDERED_LIST_ITEM, Syntax.createTextSyntax("Foo"), boldText);
         Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(SyntaxType.UNORDERED_LIST, fooItem));
 
         //act
@@ -93,7 +93,7 @@ public class HtmlGeneratorTest {
 
     private void assertElementWithOneTextChild(SyntaxType type, String htmlTag) {
         //arrange
-        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(type, Syntax.createWithContent(SyntaxType.TEXT, "Foo")));
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.createWithChildren(type, Syntax.createTextSyntax("Foo")));
 
         //act
         String html = generator.parse(root);

@@ -33,13 +33,26 @@ import static org.assertj.core.api.Java6Assertions.contentOf;
 
 public class IntegrationTest {
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     @Test
-    public void test() throws URISyntaxException {
-        File markdownFile = new File(IntegrationTest.class.getResource("/org/kizombadev/markdownparser/integrationtest/basic.md").toURI());
-        File expectedHtmlFile = new File(IntegrationTest.class.getResource("/org/kizombadev/markdownparser/integrationtest/basic.html").toURI());
+    public void testBasic() throws URISyntaxException {
+        executeIntegrationTest("basic");
+    }
+
+    @Test
+    public void testQuotation() throws URISyntaxException {
+        executeIntegrationTest("quotation");
+    }
+
+    @Test
+    public void testBigHeadline() throws URISyntaxException {
+        executeIntegrationTest("bigHeadline");
+    }
+
+    private void executeIntegrationTest(String testcase) throws URISyntaxException {
+        File markdownFile = new File(IntegrationTest.class.getResource("/org/kizombadev/markdownparser/integrationtest/" + testcase + ".md").toURI());
+        File expectedHtmlFile = new File(IntegrationTest.class.getResource("/org/kizombadev/markdownparser/integrationtest/" + testcase + ".html").toURI());
 
         File generatedHtmlFile = Paths.get(folder.getRoot().getPath(), "output.html").toFile();
 

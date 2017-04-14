@@ -9,6 +9,8 @@
   </component>
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/src/test/resources/org/kizombadev/markdownparser/integrationtest/basic.html" />
+    <file url="file://$PROJECT_DIR$/src/test/resources/org/kizombadev/markdownparser/integrationtest/bigHeadline.html" />
+    <file url="file://$PROJECT_DIR$/src/test/resources/org/kizombadev/markdownparser/integrationtest/quotation.html" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
