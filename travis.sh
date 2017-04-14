@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Minimal Maven settings
 export MAVEN_OPTS="-Xmx1G -Xms128m"
-MAVEN_ARGS="-Dmaven.test.redirectTestOutputToFile=false -Dsurefire.useFile=false -B -e -V "
+MAVEN_ARGS="-Dmaven.test.redirectTestOutputToFile=false -Dsurefire.useFile=false -B -e -V -T 1C"
 
 if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo 'Build and analyze master'
