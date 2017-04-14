@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -80,5 +80,33 @@ public class Syntax {
     @NotNull
     public SyntaxType getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Syntax syntax = (Syntax) o;
+
+        if (!children.equals(syntax.children)) {
+            return false;
+        }
+        if (content != null ? !content.equals(syntax.content) : syntax.content != null) {
+            return false;
+        }
+        return type == syntax.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = children.hashCode();
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + type.hashCode();
+        return result;
     }
 }

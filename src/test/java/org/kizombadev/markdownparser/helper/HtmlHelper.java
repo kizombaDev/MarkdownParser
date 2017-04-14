@@ -18,8 +18,9 @@
  *
  */
 
-package org.kizombadev.markdownparser.entities;
+package org.kizombadev.markdownparser.helper;
 
-public enum SyntaxType {
-    TEXT, ROOT, BIG_HEADLINE, BOLD, QUOTATION, SMALL_HEADLINE, UNORDERED_LIST, ITALIC, UNORDERED_LIST_ITEM, PARAGRAPH
+public class HtmlHelper {
+    public static final String HTML_START = "<!DOCTYPE html><html><body>";
+    public static final String HTML_END = "</body></html>";
 }

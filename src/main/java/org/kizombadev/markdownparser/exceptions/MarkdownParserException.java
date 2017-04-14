@@ -18,8 +18,25 @@
  *
  */
 
-package org.kizombadev.markdownparser.entities;
+package org.kizombadev.markdownparser.exceptions;
 
-public enum SyntaxType {
-    TEXT, ROOT, BIG_HEADLINE, BOLD, QUOTATION, SMALL_HEADLINE, UNORDERED_LIST, ITALIC, UNORDERED_LIST_ITEM, PARAGRAPH
+public class MarkdownParserException extends RuntimeException {
+    public MarkdownParserException() {
+    }
+
+    public MarkdownParserException(String message) {
+        super(message);
+    }
+
+    public MarkdownParserException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public MarkdownParserException(Throwable cause) {
+        super(cause);
+    }
+
+    public MarkdownParserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

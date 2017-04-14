@@ -32,7 +32,6 @@ import java.io.OutputStream;
 public class MarkdownParser {
 
     private MarkdownParser() {
-
     }
 
     public static MarkdownParser create() {

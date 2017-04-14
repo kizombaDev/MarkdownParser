@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -23,6 +23,7 @@ package org.kizombadev.markdownparser;
 import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
+import org.kizombadev.markdownparser.exceptions.UnknownSyntaxTypeException;
 
 public class HtmlGenerator {
 
@@ -66,9 +67,10 @@ public class HtmlGenerator {
                 handleTag("ul", child, html);
             } else if (SyntaxType.UNORDERED_LIST_ITEM.equals(child.getType())) {
                 handleTag("li", child, html);
+            } else if (SyntaxType.PARAGRAPH.equals(child.getType())) {
+                handleTag("p", child, html);
             } else {
-                //todo exception text
-                throw new IllegalStateException();
+                throw new UnknownSyntaxTypeException("The syntax type " + child.getType().toString() + "is unknown");
             }
         }
     }

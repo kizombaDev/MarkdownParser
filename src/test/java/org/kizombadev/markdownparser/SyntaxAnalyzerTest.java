@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -55,6 +55,14 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
+    public void testDoubleNumberSignBlankText() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleNumberSign, Token.Blank, Token.createTextToken("Foo")));
+        assertThat(syntax.getChildren()).hasSize(1);
+        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.SMALL_HEADLINE);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+    }
+
+    @Test
     public void testNumberSignTextNewLineDoubleNumberSingText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.NumberSign, Token.createTextToken("Foo"), Token.NewLine, Token.DoubleNumberSign, Token.createTextToken("Bar")));
         assertThat(syntax.getChildren()).hasSize(2);
@@ -87,16 +95,18 @@ public class SyntaxAnalyzerTest {
     public void testDoubleStarTextDoubleStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar));
         assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
     }
 
     @Test
     public void testStarTextStar() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.Star, Token.createTextToken("Foo"), Token.Star));
         assertThat(syntax.getChildren()).hasSize(1);
-        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.ITALIC);
-        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isSyntaxTypeOf(SyntaxType.ITALIC);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
     }
 
     @Test
@@ -117,5 +127,42 @@ public class SyntaxAnalyzerTest {
         assertThat(syntax.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
         assertThat(syntax.getChildren().get(0).getChildren().get(1)).isSyntaxTypeOf(SyntaxType.UNORDERED_LIST_ITEM);
         assertThat(syntax.getChildren().get(0).getChildren().get(1).getChildren().get(0)).isTextElementWith("Bar");
+    }
+
+    @Test
+    public void testText() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo")));
+        assertThat(syntax.getChildren()).hasSize(1);
+        assertThat(syntax.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(syntax.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+    }
+
+    @Test
+    public void testTextBlankBlankNewLineText() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.Blank, Token.Blank, Token.NewLine, Token.createTextToken("Bar")));
+        assertThat(syntax.getChildren()).hasSize(2);
+        Syntax paragraph = syntax.getChildren().get(0);
+        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(paragraph.getChildren()).hasSize(1);
+        assertThat(paragraph.getChildren().get(0)).isTextElementWith("Foo");
+
+        paragraph = syntax.getChildren().get(1);
+        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(paragraph.getChildren()).hasSize(1);
+        assertThat(paragraph.getChildren().get(0)).isTextElementWith("Bar");
+    }
+
+    @Test
+    public void test() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.createTextToken("Foo"), Token.DoubleStar, Token.Blank, Token.createTextToken("Bar")));
+        assertThat(syntax.getChildren()).hasSize(1);
+
+        Syntax paragraph = syntax.getChildren().get(0);
+        assertThat(paragraph).isSyntaxTypeOf(SyntaxType.PARAGRAPH);
+        assertThat(paragraph.getChildren()).hasSize(2);
+
+        assertThat(paragraph.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.BOLD);
+        assertThat(paragraph.getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
+        assertThat(paragraph.getChildren().get(1)).isTextElementWith(" Bar");
     }
 }

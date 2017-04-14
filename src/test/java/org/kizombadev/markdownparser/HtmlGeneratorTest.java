@@ -7,7 +7,7 @@
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -26,10 +26,11 @@ import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.kizombadev.markdownparser.helper.HtmlHelper.HTML_END;
+import static org.kizombadev.markdownparser.helper.HtmlHelper.HTML_START;
 
 public class HtmlGeneratorTest {
-    private static final String HTML_START = "<!DOCTYPE html><html><body>";
-    private static final String HTML_END = "</body></html>";
+
     private HtmlGenerator generator;
 
     @Before

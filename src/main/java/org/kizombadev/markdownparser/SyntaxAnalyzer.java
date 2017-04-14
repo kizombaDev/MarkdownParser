@@ -26,15 +26,19 @@ import org.jetbrains.annotations.Nullable;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.Token;
+import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 
 //todo make the syntaxTree Immutable
 
 public class SyntaxAnalyzer {
 
+    private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
     private ImmutableList<Token> tokens;
     private int tokenIndex = 0;
     private boolean isBoldModeActive = false;
     private boolean isItalicModeEnabled = false;
+    private int blankCounter = 0;
+    private int infinityLoopCounter = 0;
 
     @NotNull
     public static SyntaxAnalyzer create() {
@@ -56,20 +60,85 @@ public class SyntaxAnalyzer {
                 handleSmallHeadlineLine(root);
             } else if (Token.GreaterThanSign.equals(currentToken)) {
                 handleQuotation(root);
-            } else if (Token.DoubleStar.equals(currentToken)) {
-                handleBold(root);
             } else if (Token.Star.equals(currentToken) && Token.Blank.equals(nextToken())) {
                 handleUnorderedList(root);
-            } else if (Token.Star.equals(currentToken)) {
-                handleItalic(root);
             } else if (Token.NewLine.equals(currentToken)) {
                 stepTokenForward();
+                blankCounter = 0;
+            } else {
+                handleParagraph(root);
             }
+
+            checkInfinityLoop();
 
             currentToken = currentToken();
         }
 
         return root;
+    }
+
+    private void handleLineContainer(Syntax currentRoot) {
+        SkipBlanks();
+
+        Token currentToken = currentToken();
+
+        while (currentToken != null && !currentToken.equals(Token.NewLine)) {
+
+            if ((Token.DoubleStar.equals(currentToken) && isBoldModeActive) ||
+                    (Token.Star.equals(currentToken) && isItalicModeEnabled)) {
+                return;
+            } else if (Token.DoubleStar.equals(currentToken)) {
+                handleBold(currentRoot);
+            } else if (Token.Star.equals(currentToken)) {
+                handleItalic(currentRoot);
+            } else if (currentToken.isTextToken()) {
+                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, addBlanks() + currentToken.getTextValue()));
+                stepTokenForward();
+            } else if (Token.Blank.equals(currentToken)) {
+                stepTokenForward();
+                blankCounter++;
+            }
+
+            checkInfinityLoop();
+
+            currentToken = currentToken();
+        }
+    }
+
+    private void checkInfinityLoop() {
+        if (infinityLoopCounter > INFINITY_LOOP_DETECTION_COUNT) {
+            throw new MarkdownParserException();
+        }
+
+        infinityLoopCounter++;
+    }
+
+    private void SkipBlanks() {
+        Token currentToken = currentToken();
+
+        while (Token.Blank.equals(currentToken)) {
+            stepTokenForward();
+            currentToken = currentToken();
+        }
+    }
+
+    private String addBlanks() {
+
+        String result = "";
+
+        for (int i = 0; i < blankCounter; i++) {
+            result += " ";
+        }
+
+        blankCounter = 0;
+
+        return result;
+    }
+
+    private void handleParagraph(Syntax root) {
+        Syntax paragraph = Syntax.create(SyntaxType.PARAGRAPH);
+        handleLineContainer(paragraph);
+        root.addChild(paragraph);
     }
 
     private void handleUnorderedList(Syntax currentRoot) {
@@ -120,28 +189,6 @@ public class SyntaxAnalyzer {
         currentRoot.addChild(smallHeadline);
     }
 
-    private void handleLineContainer(Syntax currentRoot) {
-
-        Token currentToken = currentToken();
-
-        while (currentToken != null && !currentToken.equals(Token.NewLine)) {
-
-            if (Token.DoubleStar.equals(currentToken) && isBoldModeActive ||
-                    Token.Star.equals(currentToken) && isItalicModeEnabled) {
-                return;
-            } else if (Token.DoubleStar.equals(currentToken)) {
-                handleBold(currentRoot);
-            } else if (Token.Star.equals(currentToken)) {
-                handleItalic(currentRoot);
-            } else if (currentToken.isTextToken()) {
-                currentRoot.addChild(Syntax.createWithContent(SyntaxType.TEXT, currentToken.getTextValue()));
-                stepTokenForward();
-            }
-
-            currentToken = currentToken();
-        }
-    }
-
     private void handleBold(Syntax currentRoot) {
         isBoldModeActive = true;
         stepTokenForward();
@@ -179,6 +226,8 @@ public class SyntaxAnalyzer {
     }
 
     private void stepTokenForward() {
+
         tokenIndex++;
+        infinityLoopCounter = 0;
     }
 }

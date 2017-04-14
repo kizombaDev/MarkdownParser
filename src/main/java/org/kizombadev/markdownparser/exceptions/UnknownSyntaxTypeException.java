@@ -18,8 +18,25 @@
  *
  */
 
-package org.kizombadev.markdownparser.entities;
+package org.kizombadev.markdownparser.exceptions;
 
-public enum SyntaxType {
-    TEXT, ROOT, BIG_HEADLINE, BOLD, QUOTATION, SMALL_HEADLINE, UNORDERED_LIST, ITALIC, UNORDERED_LIST_ITEM, PARAGRAPH
+public class UnknownSyntaxTypeException extends MarkdownParserException {
+    public UnknownSyntaxTypeException() {
+    }
+
+    public UnknownSyntaxTypeException(String message) {
+        super(message);
+    }
+
+    public UnknownSyntaxTypeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public UnknownSyntaxTypeException(Throwable cause) {
+        super(cause);
+    }
+
+    public UnknownSyntaxTypeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
