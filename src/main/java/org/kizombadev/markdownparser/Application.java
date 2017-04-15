@@ -58,7 +58,10 @@ public class Application {
     private void startOption() {
         if (cmd.hasOption(INPUT_OPTION) && cmd.hasOption(OUTPUT_OPTION)) {
             executeParser(cmd);
+        } else if (cmd.hasOption(HELP_OPTION)) {
+            printHelp();
         } else {
+            writeToOut("Ups ... no valid options was found." + System.lineSeparator());
             printHelp();
         }
     }
@@ -101,5 +104,9 @@ public class Application {
         options.addOption(HELP_OPTION.substring(0, 1), HELP_OPTION, false, "print this message");
     }
 
-
+    private void writeToOut(String text) {
+        PrintWriter writer = new PrintWriter(System.out);
+        writer.println(text);
+        writer.flush();
+    }
 }

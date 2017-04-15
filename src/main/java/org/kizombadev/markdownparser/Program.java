@@ -25,7 +25,8 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 public class Program {
-    private final static Logger log = Logger.getLogger(Program.class);
+
+    private final static Logger LOG = Logger.getLogger(Program.class);
 
     private Program() {
         //nothing to do
@@ -38,7 +39,7 @@ public class Program {
             Application.create().execute(args);
 
         } catch (Exception e) {
-            log.error("Unknown Error", e);
+            LOG.error("Unknown Error", e);
         }
     }
 }

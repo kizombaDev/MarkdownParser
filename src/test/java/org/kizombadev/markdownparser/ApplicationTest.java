@@ -20,6 +20,7 @@
 
 package org.kizombadev.markdownparser;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,8 @@ public class ApplicationTest {
 
     @Before
     public void init() {
+        BasicConfigurator.configure();
+
         out = System.out;
         outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
@@ -49,9 +52,24 @@ public class ApplicationTest {
     }
 
     @Test
+    public void testWithOutArgs() {
+        Application.create().execute(null);
+
+        String actualConsoleOut = getOut();
+
+        String expectdConsoleOut = "Ups ... no valid options was found." + NEW_LINE + NEW_LINE +
+                "usage: MarkdownParser" + NEW_LINE +
+                " -h,--help           print this message" + NEW_LINE +
+                " -i,--input <arg>    the name of the input file (Markdown)" + NEW_LINE +
+                " -o,--output <arg>   the name of the output file (HTML)" + NEW_LINE;
+
+        assertThat(actualConsoleOut).isEqualTo(expectdConsoleOut);
+    }
+
+    @Test
     public void testHelp() {
 
-        Application.create().execute(null);
+        Application.create().execute(new String[]{"-h"});
 
         String actualConsoleOut = getOut();
 
@@ -67,5 +85,4 @@ public class ApplicationTest {
     private String getOut() {
         return new String(outputStream.toByteArray());
     }
-
 }
