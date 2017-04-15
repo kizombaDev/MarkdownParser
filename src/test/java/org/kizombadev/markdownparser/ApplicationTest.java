@@ -20,7 +20,8 @@
 
 package org.kizombadev.markdownparser;
 
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -29,20 +30,42 @@ import java.io.PrintStream;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class ApplicationTest {
-    @Test
-    @Ignore
-    public void test() {
-        PrintStream out = System.out;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+    private static final String NEW_LINE = System.lineSeparator();
+    private ByteArrayOutputStream outputStream;
+    private PrintStream out;
+
+    @Before
+    public void init() {
+        out = System.out;
+        outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
-        System.setErr(printStream);
+        System.setOut(printStream);
+    }
 
-        new Application().execute(null);
-
-        String console = new String(outputStream.toByteArray());
-
-        assertThat(console).isNotEmpty();
-
+    @After
+    public void cleanup() {
         System.setOut(out);
     }
+
+    @Test
+    public void testHelp() {
+
+        Application.create().execute(null);
+
+        String actualConsoleOut = getOut();
+
+        String expectdConsoleOut = "usage: MarkdownParser" + NEW_LINE +
+                " -h,--help           print this message" + NEW_LINE +
+                " -i,--input <arg>    the name of the input file (Markdown)" + NEW_LINE +
+                " -o,--output <arg>   the name of the output file (HTML)" + NEW_LINE;
+
+        assertThat(actualConsoleOut).isEqualTo(expectdConsoleOut);
+
+    }
+
+    private String getOut() {
+        return new String(outputStream.toByteArray());
+    }
+
 }

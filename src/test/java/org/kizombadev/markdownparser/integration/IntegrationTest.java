@@ -20,6 +20,8 @@
 
 package org.kizombadev.markdownparser.integration;
 
+import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -47,8 +49,20 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testBigHeadline() throws URISyntaxException {
-        executeIntegrationTest("bigHeadline");
+    public void testHeadline() throws URISyntaxException {
+        executeIntegrationTest("headline");
+    }
+
+    @Test
+    @Ignore
+    public void testUnorderedList() throws URISyntaxException {
+        executeIntegrationTest("unorderedList");
+    }
+
+    @Test
+    @Ignore
+    public void testParagraph() throws URISyntaxException {
+        executeIntegrationTest("paragraph");
     }
 
     private void executeIntegrationTest(String testcase) throws URISyntaxException {
@@ -69,6 +83,7 @@ public class IntegrationTest {
         assertThat(contentOf(generatedHtmlFile)).isEqualTo(replaceNewLineChars(contentOf(expectedHtmlFile)));
     }
 
+    @NotNull
     private String replaceNewLineChars(String content) {
         return content.replace("\n\r", "").replace("\n", "").replace(System.lineSeparator(), "");
     }

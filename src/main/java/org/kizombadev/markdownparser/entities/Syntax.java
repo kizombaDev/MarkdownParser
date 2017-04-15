@@ -63,6 +63,7 @@ public class Syntax {
         return createWithChildren(type);
     }
 
+    @NotNull
     public ImmutableList<Syntax> getChildren() {
         return ImmutableList.copyOf(children);
     }
@@ -81,26 +82,4 @@ public class Syntax {
     public SyntaxType getType() {
         return type;
     }
-
-    /*@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Syntax syntax = (Syntax) o;
-
-        return Objects.equal(children, syntax.children) && Objects.equal(content, syntax.content) && Objects.equal(type, syntax.type);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = children.hashCode();
-        result = 31 * result + (content != null ? content.hashCode() : 0);
-        result = 31 * result + type.hashCode();
-        return result;
-    }*/
 }

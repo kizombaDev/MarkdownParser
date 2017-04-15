@@ -74,6 +74,8 @@ public class SyntaxAnalyzer {
             currentToken = current();
         }
 
+        //SyntaxRewriter.create().rewrite(root);
+
         return root;
     }
 
@@ -98,6 +100,7 @@ public class SyntaxAnalyzer {
                 currentRoot.addChild(Syntax.createTextSyntax(currentToken.getTextValue()));
                 stepTokenForward();
             } else if (Token.Blank.equals(currentToken)) {
+                //currentRoot.addChild(Syntax.createTextSyntax(" "));
                 stepTokenForward();
                 shouldInsertBlank = true;
             }

@@ -21,21 +21,23 @@
 package org.kizombadev.markdownparser;
 
 import org.apache.commons.cli.*;
-import org.apache.log4j.Logger;
 import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 
 import java.io.*;
 
 public class Application {
-    private final static Logger log = Logger.getLogger(Application.class);
     private static final String OUTPUT_OPTION = "output";
     private static final String INPUT_OPTION = "input";
     private static final String HELP_OPTION = "help";
     private final Options options = new Options();
     private CommandLine cmd;
 
-    public Application() {
+    private Application() {
         initCommandLineParser();
+    }
+
+    public static Application create() {
+        return new Application();
     }
 
     public void execute(String[] args) {
@@ -81,11 +83,10 @@ public class Application {
     }
 
     private void createOutputFile(File outputFile) {
-        boolean result = false;
         try {
-            result = outputFile.createNewFile();
+            outputFile.createNewFile();
         } catch (IOException e) {
-            throw new MarkdownParserException("Cannot create the output file. The method result was " + result, e);
+            throw new MarkdownParserException("Cannot create the output file", e);
         }
     }
 
@@ -99,4 +100,6 @@ public class Application {
         options.addOption(INPUT_OPTION.substring(0, 1), INPUT_OPTION, true, "the name of the input file (Markdown)");
         options.addOption(HELP_OPTION.substring(0, 1), HELP_OPTION, false, "print this message");
     }
+
+
 }
