@@ -18,27 +18,18 @@
  *
  */
 
-package org.kizombadev.markdownparser;
+package org.kizombadev.markdownparser.utils;
 
+import com.google.common.collect.ImmutableList;
+import org.junit.Test;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class Program {
-    private final static Logger log = Logger.getLogger(Program.class);
+public class StringUtilsTest {
 
-    private Program() {
-        //nothing to do
-    }
-
-    public static void main(String[] args) {
-
-        try {
-            BasicConfigurator.configure();
-            new Application().execute(args);
-
-        } catch (Exception e) {
-            log.error("Unknown Error", e);
-        }
+    @Test
+    public void testEmptyStringToCharacterArray() {
+        ImmutableList<Character> result = StringUtils.convertToCharacterArray("");
+        assertThat(result).hasSize(0);
     }
 }

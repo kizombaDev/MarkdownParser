@@ -28,8 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.kizombadev.markdownparser.helper.HtmlHelper.HTML_END;
-import static org.kizombadev.markdownparser.helper.HtmlHelper.HTML_START;
+import static org.kizombadev.markdownparser.testhelper.HtmlHelper.HTML_END;
+import static org.kizombadev.markdownparser.testhelper.HtmlHelper.HTML_START;
 
 public class MarkdownParserTest {
     @Test

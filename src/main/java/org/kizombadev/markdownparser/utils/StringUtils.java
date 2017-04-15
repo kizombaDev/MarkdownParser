@@ -18,27 +18,17 @@
  *
  */
 
-package org.kizombadev.markdownparser;
+package org.kizombadev.markdownparser.utils;
 
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.ArrayUtils;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-
-public class Program {
-    private final static Logger log = Logger.getLogger(Program.class);
-
-    private Program() {
+public class StringUtils {
+    private StringUtils() {
         //nothing to do
     }
 
-    public static void main(String[] args) {
-
-        try {
-            BasicConfigurator.configure();
-            new Application().execute(args);
-
-        } catch (Exception e) {
-            log.error("Unknown Error", e);
-        }
+    public static ImmutableList<Character> convertToCharacterArray(String value) {
+        return ImmutableList.copyOf(ArrayUtils.toObject(value.toCharArray()));
     }
 }

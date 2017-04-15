@@ -31,12 +31,11 @@ import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 public class SyntaxAnalyzer {
 
     private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
-    private ImmutableList<Token> tokens;
-    private int tokenIndex = 0;
     private boolean isBoldModeActive = false;
     private boolean isItalicModeEnabled = false;
     private boolean shouldInsertBlank = false;
     private int infinityLoopCounter = 0;
+    private ItemStream<Token> tokenStream;
 
     @NotNull
     public static SyntaxAnalyzer create() {
@@ -44,11 +43,12 @@ public class SyntaxAnalyzer {
     }
 
     public Syntax parse(ImmutableList<Token> tokens) {
-        this.tokens = tokens;
+
+        this.tokenStream = ItemStream.create(tokens);
 
         Syntax root = Syntax.create(SyntaxType.ROOT);
 
-        Token currentToken = currentToken();
+        Token currentToken = current();
 
         while (currentToken != null) {
 
@@ -58,7 +58,7 @@ public class SyntaxAnalyzer {
                 handleSmallHeadlineLine(root);
             } else if (Token.GreaterThanSign.equals(currentToken)) {
                 handleQuotation(root);
-            } else if (Token.Star.equals(currentToken) && Token.Blank.equals(nextToken())) {
+            } else if (Token.Star.equals(currentToken) && Token.Blank.equals(next())) {
                 handleUnorderedList(root);
             } else if (Token.NewLine.equals(currentToken)) {
                 stepTokenForward();
@@ -69,7 +69,7 @@ public class SyntaxAnalyzer {
 
             checkInfinityLoop();
 
-            currentToken = currentToken();
+            currentToken = current();
         }
 
         return root;
@@ -78,7 +78,7 @@ public class SyntaxAnalyzer {
     private void handleLine(Syntax currentRoot) {
         skipBlanks();
 
-        Token currentToken = currentToken();
+        Token currentToken = current();
 
         while (currentToken != null && !currentToken.equals(Token.NewLine)) {
 
@@ -102,7 +102,7 @@ public class SyntaxAnalyzer {
 
             checkInfinityLoop();
 
-            currentToken = currentToken();
+            currentToken = current();
         }
     }
 
@@ -122,11 +122,11 @@ public class SyntaxAnalyzer {
     }
 
     private void skipBlanks() {
-        Token currentToken = currentToken();
+        Token currentToken = current();
 
         while (Token.Blank.equals(currentToken)) {
             stepTokenForward();
-            currentToken = currentToken();
+            currentToken = current();
         }
     }
 
@@ -139,13 +139,13 @@ public class SyntaxAnalyzer {
     private void handleUnorderedList(Syntax currentRoot) {
         Syntax unorderedList = Syntax.create(SyntaxType.UNORDERED_LIST);
 
-        while (Token.Star.equals(currentToken()) && Token.Blank.equals(nextToken())) {
+        while (Token.Star.equals(current()) && Token.Blank.equals(next())) {
             stepTokenForward();
             stepTokenForward();
 
             handleUnorderedListItem(unorderedList);
 
-            if (Token.NewLine.equals(currentToken())) {
+            if (Token.NewLine.equals(current())) {
                 stepTokenForward();
                 shouldInsertBlank = false;
             }
@@ -206,24 +206,17 @@ public class SyntaxAnalyzer {
     }
 
     @Nullable
-    private Token currentToken() {
-        if (tokenIndex >= tokens.size()) {
-            return null;
-        }
-        return tokens.get(tokenIndex);
+    private Token current() {
+        return tokenStream.current();
     }
 
     @Nullable
-    private Token nextToken() {
-        if (tokenIndex + 1 >= tokens.size()) {
-            return null;
-        }
-        return tokens.get(tokenIndex + 1);
+    private Token next() {
+        return tokenStream.next();
     }
 
     private void stepTokenForward() {
-
-        tokenIndex++;
+        tokenStream.stepTokenForward();
         infinityLoopCounter = 0;
     }
 }

@@ -24,9 +24,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Token;
+import org.kizombadev.markdownparser.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,41 +46,41 @@ public class LexicalAnalyzer {
     public ImmutableList<Token> parse(final String input) {
         checkNotNull(input);
 
-        final ParserInputStream tokenStream = ParserInputStream.create(input);
+        final ItemStream tokenStream = ItemStream.create(StringUtils.convertToCharacterArray(input));
 
-        while (tokenStream.hasNext()) {
-            tokenStream.next();
+        while (tokenStream.current() != null) {
 
-            if (tokenStream.current() == '\r' && tokenStream.hasNext() && tokenStream.showNext() == '\n') {
+            if (Objects.equals(tokenStream.current(), '\r') && Objects.equals(tokenStream.next(), '\n')) {
                 handleEndOfText();
                 tokens.add(Token.NewLine);
-                tokenStream.next();
-            } else if (tokenStream.current() == '\n') {
+                tokenStream.stepTokenForward();
+            } else if (Objects.equals(tokenStream.current(), '\n')) {
                 handleEndOfText();
                 tokens.add(Token.NewLine);
-            } else if (tokenStream.current() == '#' && tokenStream.hasNext() && tokenStream.showNext() == '#') {
+            } else if (Objects.equals(tokenStream.current(), '#') && Objects.equals(tokenStream.next(), '#')) {
                 handleEndOfText();
                 tokens.add(Token.DoubleNumberSign);
-                tokenStream.next();
-            } else if (tokenStream.current() == '#') {
+                tokenStream.stepTokenForward();
+            } else if (Objects.equals(tokenStream.current(), '#')) {
                 handleEndOfText();
                 tokens.add(Token.NumberSign);
-            } else if (tokenStream.current() == '*' && tokenStream.hasNext() && tokenStream.showNext() == '*') {
+            } else if (Objects.equals(tokenStream.current(), '*') && Objects.equals(tokenStream.next(), '*')) {
                 handleEndOfText();
                 tokens.add(Token.DoubleStar);
-                tokenStream.next();
-            } else if (tokenStream.current() == '*') {
+                tokenStream.stepTokenForward();
+            } else if (Objects.equals(tokenStream.current(), '*')) {
                 handleEndOfText();
                 tokens.add(Token.Star);
-            } else if (tokenStream.current() == '>') {
+            } else if (Objects.equals(tokenStream.current(), '>')) {
                 handleEndOfText();
                 tokens.add(Token.GreaterThanSign);
-            } else if (tokenStream.current() == ' ') {
+            } else if (Objects.equals(tokenStream.current(), ' ')) {
                 handleEndOfText();
                 tokens.add(Token.Blank);
             } else {
                 text.append(tokenStream.current());
             }
+            tokenStream.stepTokenForward();
         }
 
         handleEndOfText();

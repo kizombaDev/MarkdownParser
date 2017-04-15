@@ -29,7 +29,7 @@ import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.Token;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.kizombadev.markdownparser.helper.SyntaxAssert.assertThat;
+import static org.kizombadev.markdownparser.testhelper.SyntaxAssert.assertThat;
 
 public class SyntaxAnalyzerTest {
     private SyntaxAnalyzer underTest;

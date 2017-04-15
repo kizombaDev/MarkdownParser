@@ -18,13 +18,13 @@
  *
  */
 
-package org.kizombadev.markdownparser.helper;
+package org.kizombadev.markdownparser.testhelper;
 
 import org.junit.Test;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 
-import static org.kizombadev.markdownparser.helper.SyntaxAssert.assertThat;
+import static org.kizombadev.markdownparser.testhelper.SyntaxAssert.assertThat;
 
 
 public class SyntaxAssertTest {

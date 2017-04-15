@@ -45,7 +45,7 @@ public class Application {
 
     public void execute(String[] args) {
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = null;
+        CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
@@ -65,11 +65,12 @@ public class Application {
         InputStream inputStream;
 
         File outputFile = new File(cmd.getOptionValue(OUTPUT_OPTION));
-            try {
-                outputFile.createNewFile();
-            } catch (IOException e) {
-                throw new MarkdownParserException("Cannot create the output file", e);
-            }
+        boolean result = false;
+        try {
+            result = outputFile.createNewFile();
+        } catch (IOException e) {
+            throw new MarkdownParserException("Cannot create the output file. The method result was " + result, e);
+        }
 
         try (OutputStream outputStream = new FileOutputStream(outputFile)) {
             inputStream = new FileInputStream(cmd.getOptionValue("input"));

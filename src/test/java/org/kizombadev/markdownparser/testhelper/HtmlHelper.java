@@ -18,7 +18,7 @@
  *
  */
 
-package org.kizombadev.markdownparser.helper;
+package org.kizombadev.markdownparser.testhelper;
 
 public class HtmlHelper {
     public static final String HTML_START = "<!DOCTYPE html><html><body>";

@@ -18,7 +18,7 @@
  *
  */
 
-package org.kizombadev.markdownparser.helper;
+package org.kizombadev.markdownparser.testhelper;
 
 import org.assertj.core.api.AbstractAssert;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +27,7 @@ import org.kizombadev.markdownparser.entities.SyntaxType;
 
 import java.util.Objects;
 
+@SuppressWarnings("UnusedReturnValue")
 public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
 
     private SyntaxAssert(Syntax actual) {

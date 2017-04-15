@@ -21,40 +21,36 @@
 package org.kizombadev.markdownparser;
 
 import org.junit.Test;
+import org.kizombadev.markdownparser.utils.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ParserInputStreamTest {
+public class ItemStreamTest {
 
     @Test
     public void testEmptyInput() {
-        final ParserInputStream tokenStream = ParserInputStream.create("");
-
-        assertThat(tokenStream.hasNext()).isFalse();
-
-        assertThatThrownBy(tokenStream::next).isInstanceOf(IllegalStateException.class);
-        assertThatThrownBy(tokenStream::showNext).isInstanceOf(IllegalStateException.class);
+        final ItemStream tokenStream = ItemStream.create(StringUtils.convertToCharacterArray(""));
+        assertThat(tokenStream.current()).isNull();
+        assertThat(tokenStream.next()).isNull();
     }
 
     @Test
     public void testOneCharacterInput() {
-        ParserInputStream tokenStream = ParserInputStream.create("a");
-
-        assertThat(tokenStream.hasNext()).isTrue();
-        assertThat(tokenStream.showNext()).isEqualTo('a');
-        assertThat(tokenStream.next()).isEqualTo('a');
-
-        assertThat(tokenStream.hasNext()).isFalse();
-
-        assertThatThrownBy(tokenStream::showNext).isInstanceOf(IllegalStateException.class);
+        ItemStream tokenStream = ItemStream.create(StringUtils.convertToCharacterArray("a"));
+        assertThat(tokenStream.current()).isEqualTo('a');
+        assertThat(tokenStream.next()).isNull();
+        tokenStream.stepTokenForward();
+        assertThat(tokenStream.current()).isNull();
+        assertThat(tokenStream.next()).isNull();
     }
 
     @Test
     public void testLargeInput() {
-        ParserInputStream tokenStream = ParserInputStream.create("abc");
-        assertThat(tokenStream.next()).isEqualTo('a');
-        assertThat(tokenStream.next()).isEqualTo('b');
-        assertThat(tokenStream.next()).isEqualTo('c');
+        ItemStream tokenStream = ItemStream.create(StringUtils.convertToCharacterArray("abc"));
+        assertThat(tokenStream.current()).isEqualTo('a');
+        tokenStream.stepTokenForward();
+        assertThat(tokenStream.current()).isEqualTo('b');
+        tokenStream.stepTokenForward();
+        assertThat(tokenStream.current()).isEqualTo('c');
     }
 }

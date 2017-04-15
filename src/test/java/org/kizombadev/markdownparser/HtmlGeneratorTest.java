@@ -26,8 +26,8 @@ import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.kizombadev.markdownparser.helper.HtmlHelper.HTML_END;
-import static org.kizombadev.markdownparser.helper.HtmlHelper.HTML_START;
+import static org.kizombadev.markdownparser.testhelper.HtmlHelper.HTML_END;
+import static org.kizombadev.markdownparser.testhelper.HtmlHelper.HTML_START;
 
 public class HtmlGeneratorTest {
 

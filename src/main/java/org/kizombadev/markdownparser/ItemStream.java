@@ -21,41 +21,44 @@
 package org.kizombadev.markdownparser;
 
 
+import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.Nullable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
-public class ParserInputStream {
-    private String content;
+public class ItemStream<T> {
     private int index = 0;
-    private char current;
+    private ImmutableList<T> inputCollection;
 
-    private ParserInputStream() {
+    private ItemStream() {
     }
 
-    public static ParserInputStream create(String content) {
-        checkNotNull(content);
+    public static <T> ItemStream create(ImmutableList<T> inputCollection) {
+        checkNotNull(inputCollection);
 
-        ParserInputStream result = new ParserInputStream();
-        result.content = content;
+        ItemStream result = new ItemStream();
+        result.inputCollection = inputCollection;
         return result;
     }
 
-    public char next() {
-        current = showNext();
+    @Nullable
+    public T current() {
+        if (index >= inputCollection.size()) {
+            return null;
+        }
+        return inputCollection.get(index);
+    }
+
+    @Nullable
+    public T next() {
+        if (index + 1 >= inputCollection.size()) {
+            return null;
+        }
+        return inputCollection.get(index + 1);
+    }
+
+    public void stepTokenForward() {
+
         index++;
-        return current;
-    }
-
-    public char current() {
-        return current;
-    }
-
-    public char showNext() {
-        checkState(hasNext());
-        return content.charAt(index);
-    }
-
-    public boolean hasNext() {
-        return index < content.length();
     }
 }
