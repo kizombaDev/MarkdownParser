@@ -20,42 +20,22 @@
 
 package org.kizombadev.markdownparser;
 
-import org.apache.log4j.BasicConfigurator;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import org.junit.contrib.java.lang.system.SystemOutRule;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class ApplicationTest {
 
     private static final String NEW_LINE = System.lineSeparator();
-    private ByteArrayOutputStream outputStream;
-    private PrintStream out;
 
-    @Before
-    public void init() {
-        BasicConfigurator.configure();
-
-        out = System.out;
-        outputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(outputStream);
-        System.setOut(printStream);
-    }
-
-    @After
-    public void cleanup() {
-        System.setOut(out);
-    }
+    @Rule
+    public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
     @Test
     public void testWithOutArgs() {
         Application.create().execute(null);
-
-        String actualConsoleOut = getOut();
 
         String expectdConsoleOut = "Ups ... no valid options was found." + NEW_LINE + NEW_LINE +
                 "usage: MarkdownParser" + NEW_LINE +
@@ -63,7 +43,7 @@ public class ApplicationTest {
                 " -i,--input <arg>    the name of the input file (Markdown)" + NEW_LINE +
                 " -o,--output <arg>   the name of the output file (HTML)" + NEW_LINE;
 
-        assertThat(actualConsoleOut).isEqualTo(expectdConsoleOut);
+        assertThat(systemOutRule.getLog()).isEqualTo(expectdConsoleOut);
     }
 
     @Test
@@ -71,18 +51,12 @@ public class ApplicationTest {
 
         Application.create().execute(new String[]{"-h"});
 
-        String actualConsoleOut = getOut();
-
         String expectdConsoleOut = "usage: MarkdownParser" + NEW_LINE +
                 " -h,--help           print this message" + NEW_LINE +
                 " -i,--input <arg>    the name of the input file (Markdown)" + NEW_LINE +
                 " -o,--output <arg>   the name of the output file (HTML)" + NEW_LINE;
 
-        assertThat(actualConsoleOut).isEqualTo(expectdConsoleOut);
 
-    }
-
-    private String getOut() {
-        return new String(outputStream.toByteArray());
+        assertThat(systemOutRule.getLog()).isEqualTo(expectdConsoleOut);
     }
 }
