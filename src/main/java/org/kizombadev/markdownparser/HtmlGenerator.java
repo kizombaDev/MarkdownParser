@@ -25,6 +25,8 @@ import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.exceptions.UnknownSyntaxTypeException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class HtmlGenerator {
 
     private static final String HTML_START = "<!DOCTYPE html><html><body>";
@@ -39,6 +41,7 @@ public class HtmlGenerator {
     }
 
     public String parse(Syntax root) {
+        checkNotNull(root);
 
         StringBuilder html = new StringBuilder();
 

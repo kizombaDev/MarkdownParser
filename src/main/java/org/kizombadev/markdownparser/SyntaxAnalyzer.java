@@ -28,6 +28,8 @@ import org.kizombadev.markdownparser.entities.SyntaxType;
 import org.kizombadev.markdownparser.entities.Token;
 import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class SyntaxAnalyzer {
 
     private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
@@ -43,7 +45,7 @@ public class SyntaxAnalyzer {
     }
 
     public Syntax parse(ImmutableList<Token> tokens) {
-
+        checkNotNull(tokens);
         this.tokenStream = ItemStream.create(tokens);
 
         Syntax root = Syntax.create(SyntaxType.ROOT);
@@ -179,7 +181,6 @@ public class SyntaxAnalyzer {
     private void handleSmallHeadlineLine(Syntax currentRoot) {
         Syntax smallHeadline = Syntax.create(SyntaxType.SMALL_HEADLINE);
         stepTokenForward();
-
 
         handleLine(smallHeadline);
         currentRoot.addChild(smallHeadline);

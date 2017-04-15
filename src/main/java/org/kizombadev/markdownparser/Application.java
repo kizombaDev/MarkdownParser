@@ -27,33 +27,33 @@ import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 import java.io.*;
 
 public class Application {
+    private final static Logger log = Logger.getLogger(Application.class);
     private static final String OUTPUT_OPTION = "output";
     private static final String INPUT_OPTION = "input";
     private static final String HELP_OPTION = "help";
-    private final static Logger log = Logger.getLogger(Application.class);
     private final Options options = new Options();
+    private CommandLine cmd;
 
     public Application() {
         initCommandLineParser();
     }
 
-    private void initCommandLineParser() {
-        options.addOption(OUTPUT_OPTION.substring(0, 1), OUTPUT_OPTION, true, "the name of the output file (HTML)");
-        options.addOption(INPUT_OPTION.substring(0, 1), INPUT_OPTION, true, "the name of the input file (Markdown)");
-        options.addOption(HELP_OPTION.substring(0, 1), HELP_OPTION, false, "print this message");
+    public void execute(String[] args) {
+        parseArgs(args);
+        startOption();
     }
 
-    public void execute(String[] args) {
+    private void parseArgs(String[] args) {
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
-            log.error("Parsing failed.  Reason: " + e.getMessage(), e);
-            return;
+            throw new MarkdownParserException("Parsing failed.  Reason: " + e.getMessage(), e);
         }
+    }
 
+    private void startOption() {
         if (cmd.hasOption(INPUT_OPTION) && cmd.hasOption(OUTPUT_OPTION)) {
             executeParser(cmd);
         } else {
@@ -62,18 +62,15 @@ public class Application {
     }
 
     private void executeParser(CommandLine cmd) {
-        InputStream inputStream;
 
         File outputFile = new File(cmd.getOptionValue(OUTPUT_OPTION));
-        boolean result = false;
-        try {
-            result = outputFile.createNewFile();
-        } catch (IOException e) {
-            throw new MarkdownParserException("Cannot create the output file. The method result was " + result, e);
-        }
+        createOutputFile(outputFile);
+        doExecuteParser(cmd, outputFile);
+    }
 
+    private void doExecuteParser(CommandLine cmd, File outputFile) {
         try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-            inputStream = new FileInputStream(cmd.getOptionValue("input"));
+            InputStream inputStream = new FileInputStream(cmd.getOptionValue("input"));
 
             MarkdownParser.create().parse(inputStream, outputStream);
         } catch (FileNotFoundException e) {
@@ -83,8 +80,23 @@ public class Application {
         }
     }
 
+    private void createOutputFile(File outputFile) {
+        boolean result = false;
+        try {
+            result = outputFile.createNewFile();
+        } catch (IOException e) {
+            throw new MarkdownParserException("Cannot create the output file. The method result was " + result, e);
+        }
+    }
+
     private void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("MarkdownParser", options);
+    }
+
+    private void initCommandLineParser() {
+        options.addOption(OUTPUT_OPTION.substring(0, 1), OUTPUT_OPTION, true, "the name of the output file (HTML)");
+        options.addOption(INPUT_OPTION.substring(0, 1), INPUT_OPTION, true, "the name of the input file (Markdown)");
+        options.addOption(HELP_OPTION.substring(0, 1), HELP_OPTION, false, "print this message");
     }
 }

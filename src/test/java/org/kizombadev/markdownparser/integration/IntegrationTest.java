@@ -66,6 +66,10 @@ public class IntegrationTest {
         Program.main(args);
 
         assertThat(generatedHtmlFile).exists();
-        assertThat(contentOf(generatedHtmlFile)).isEqualTo(contentOf(expectedHtmlFile));
+        assertThat(contentOf(generatedHtmlFile)).isEqualTo(replaceNewLineChars(contentOf(expectedHtmlFile)));
+    }
+
+    private String replaceNewLineChars(String content) {
+        return content.replace("\n\r", "").replace("\n", "").replace(System.lineSeparator(), "");
     }
 }
