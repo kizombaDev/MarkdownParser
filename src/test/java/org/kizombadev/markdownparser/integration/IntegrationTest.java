@@ -60,7 +60,6 @@ public class IntegrationTest {
     }
 
     @Test
-    @Ignore
     public void testParagraph() throws URISyntaxException {
         executeIntegrationTest("paragraph");
     }

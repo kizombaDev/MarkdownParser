@@ -37,7 +37,7 @@ public class SyntaxRewriterTest {
     }
 
     @Test
-    public void testCombineParagraphs() {
+    public void testCombineTwoParagraphs() {
         Syntax syntax = underTest.rewrite(Syntax.createWithChildren(SyntaxType.ROOT,
                 Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Foo")),
                 Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Bar"))));
@@ -46,6 +46,29 @@ public class SyntaxRewriterTest {
         assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
 
         assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Bar");
+    }
+
+    @Test
+    public void testCombineThreeParagraphs() {
+        Syntax syntax = underTest.rewrite(Syntax.createWithChildren(SyntaxType.ROOT,
+                Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Foo")),
+                Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Fubar")),
+                Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Bar"))));
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+        assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Fubar");
+    }
+
+    @Test
+    public void testParagraphSeparatorParagraph() {
+        Syntax syntax = underTest.rewrite(Syntax.createWithChildren(SyntaxType.ROOT,
+                Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Foo")),
+                Syntax.create(SyntaxType.PARAGRAPH_SEPARATOR),
+                Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Bar"))));
+        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.PARAGRAPH, "Bar");
     }
 
     @Test

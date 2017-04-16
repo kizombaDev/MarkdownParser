@@ -22,6 +22,7 @@ package org.kizombadev.markdownparser.entities;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.kizombadev.markdownparser.testhelper.SyntaxAssert.assertThat;
 
 
@@ -45,6 +46,38 @@ public class SyntaxTest {
         assertThat(underTest).isSyntaxTypeOf(SyntaxType.BOLD);
         assertThat(underTest.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.ITALIC);
         assertThat(underTest.getChildren().get(1)).isSyntaxTypeOf(SyntaxType.TEXT);
+    }
+
+    @Test
+    public void testChildrenCount() {
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT);
+        assertThat(root.getChildrenCount()).isEqualTo(0);
+        root.addChild(Syntax.create(SyntaxType.PARAGRAPH));
+        assertThat(root.getChildrenCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void testRemoveChildAt() {
+        //arrange
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.create(SyntaxType.PARAGRAPH));
+
+        //act
+        root.removeChildAt(0);
+
+        //assert
+        assertThat(root.getChildrenCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void testGetChildAt() {
+        //arrange
+        Syntax root = Syntax.createWithChildren(SyntaxType.ROOT, Syntax.create(SyntaxType.PARAGRAPH));
+
+        //act
+        Syntax paragraph = root.getChildAt(0);
+
+        //assert
+        assertThat(paragraph.getType()).isEqualTo(SyntaxType.PARAGRAPH);
     }
 
     //todo add missing tests

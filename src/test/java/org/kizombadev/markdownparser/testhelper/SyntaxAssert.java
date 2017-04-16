@@ -108,7 +108,6 @@ public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
         return doThreePlains(containerTypeOne, containerTypeTwo, text, 1);
     }
 
-
     public SyntaxAssert isRootAndFirstContainerAndThirdContainerAndFirstText(SyntaxType containerTypeOne, SyntaxType containerTypeTwo, String text) {
         return doThreePlains(containerTypeOne, containerTypeTwo, text, 2);
     }
@@ -141,4 +140,5 @@ public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
 
         return this;
     }
+
 }

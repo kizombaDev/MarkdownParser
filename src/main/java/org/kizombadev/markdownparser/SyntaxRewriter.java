@@ -36,25 +36,36 @@ public class SyntaxRewriter {
         rewriteParagraph(root);
         removeMultipleBlanks(root);
         removeBlanksAtTheEnd(root);
+        removeParagraphSeparator(root);
 
         return root;
     }
 
+    private void removeParagraphSeparator(Syntax currentRoot) {
+        for (int i = 0; i < currentRoot.getChildrenCount(); i++) {
+            if (SyntaxType.PARAGRAPH_SEPARATOR.equals(currentRoot.getChildAt(i).getType())) {
+                currentRoot.removeChildAt(i);
+            }
+        }
+
+        currentRoot.getChildren().stream().forEach(this::removeParagraphSeparator);
+    }
+
     private void removeBlanksAtTheEnd(Syntax currentRoot) {
-        if (currentRoot.childrenCount() == 0) {
+        if (currentRoot.getChildrenCount() == 0) {
             return;
         }
 
-        Syntax lastChild = currentRoot.getChildAt(currentRoot.childrenCount() - 1);
+        Syntax lastChild = currentRoot.getChildAt(currentRoot.getChildrenCount() - 1);
         if (SyntaxType.TEXT.equals(lastChild.getType()) && StringUtils.isBlank(lastChild.getContent())) {
-            currentRoot.removeChildAt(currentRoot.childrenCount() - 1);
+            currentRoot.removeChildAt(currentRoot.getChildrenCount() - 1);
         }
 
         currentRoot.getChildren().stream().forEach(this::removeBlanksAtTheEnd);
     }
 
     private void removeMultipleBlanks(Syntax currentRoot) {
-        for (int i = 0; i < currentRoot.childrenCount() - 1; i++) {
+        for (int i = 0; i < currentRoot.getChildrenCount() - 1; i++) {
             if (" ".equals(currentRoot.getChildAt(i).getContent()) && " ".equals(currentRoot.getChildAt(i + 1).getContent())) {
                 currentRoot.removeChildAt(i + 1);
             }
@@ -64,7 +75,7 @@ public class SyntaxRewriter {
     }
 
     private void rewriteParagraph(Syntax root) {
-        for (int i = 0; i < root.childrenCount() - 1; i++) {
+        for (int i = 0; i < root.getChildrenCount() - 1; i++) {
             if (SyntaxType.PARAGRAPH.equals(root.getChildAt(i).getType()) && SyntaxType.PARAGRAPH.equals(root.getChildAt(i + 1).getType())) {
 
                 root.getChildAt(i).addChild(Syntax.createTextSyntax(" "));
@@ -74,6 +85,8 @@ public class SyntaxRewriter {
                 }
 
                 root.removeChildAt(i + 1);
+
+                i--;
             }
         }
     }

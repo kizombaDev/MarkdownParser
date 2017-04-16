@@ -77,7 +77,7 @@ public class Syntax {
         children.remove(index);
     }
 
-    public int childrenCount() {
+    public int getChildrenCount() {
         return children.size();
     }
 

@@ -166,6 +166,14 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
+    public void testParagraphSeparator() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.NewLine, Token.NewLine, Token.createTextToken("Bar")));
+        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.PARAGRAPH, "Bar");
+    }
+
+    @Test
     @Ignore
     public void testBoldAndItalicBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.Star, Token.createTextToken("Foo"), Token.DoubleStar, Token.Star));
