@@ -192,6 +192,5 @@ public class SyntaxAnalyzerTest {
         assertThat(paragraph.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
     }
 
-    //todo multi line
     //todo zweit zitate nacheinander
 }

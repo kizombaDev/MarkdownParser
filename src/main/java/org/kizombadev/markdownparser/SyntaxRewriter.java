@@ -86,7 +86,7 @@ public class SyntaxRewriter {
 
                 root.removeChildAt(i + 1);
 
-                i--;
+                rewriteParagraph(root);
             }
         }
     }

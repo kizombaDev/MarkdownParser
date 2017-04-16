@@ -79,6 +79,4 @@ public class SyntaxTest {
         //assert
         assertThat(paragraph.getType()).isEqualTo(SyntaxType.PARAGRAPH);
     }
-
-    //todo add missing tests
 }
