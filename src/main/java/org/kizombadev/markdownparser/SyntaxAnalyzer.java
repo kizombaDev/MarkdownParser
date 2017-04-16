@@ -35,7 +35,6 @@ public class SyntaxAnalyzer {
     private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
     private boolean isBoldModeActive = false;
     private boolean isItalicModeEnabled = false;
-    private boolean shouldInsertBlank = false;
     private int infinityLoopCounter = 0;
     private ItemStream<Token> tokenStream;
 
@@ -64,7 +63,6 @@ public class SyntaxAnalyzer {
                 handleUnorderedList(root);
             } else if (Token.NewLine.equals(currentToken)) {
                 stepTokenForward();
-                shouldInsertBlank = false;
             } else {
                 handleParagraph(root);
             }
@@ -90,32 +88,21 @@ public class SyntaxAnalyzer {
                     (Token.Star.equals(currentToken) && isItalicModeEnabled)) {
                 return;
             } else if (Token.DoubleStar.equals(currentToken)) {
-                handleBlank(currentRoot);
                 handleBold(currentRoot);
             } else if (Token.Star.equals(currentToken)) {
-                handleBlank(currentRoot);
                 handleItalic(currentRoot);
             } else if (currentToken.isTextToken()) {
-                handleBlank(currentRoot);
                 currentRoot.addChild(Syntax.createTextSyntax(currentToken.getTextValue()));
                 stepTokenForward();
             } else if (Token.Blank.equals(currentToken)) {
-                //currentRoot.addChild(Syntax.createTextSyntax(" "));
+                currentRoot.addChild(Syntax.createTextSyntax(" "));
                 stepTokenForward();
-                shouldInsertBlank = true;
             }
 
             checkInfinityLoop();
 
             currentToken = current();
         }
-    }
-
-    private void handleBlank(Syntax currentRoot) {
-        if (shouldInsertBlank) {
-            currentRoot.addChild(Syntax.createTextSyntax(" "));
-        }
-        shouldInsertBlank = false;
     }
 
     private void checkInfinityLoop() {
@@ -152,7 +139,6 @@ public class SyntaxAnalyzer {
 
             if (Token.NewLine.equals(current())) {
                 stepTokenForward();
-                shouldInsertBlank = false;
             }
         }
 

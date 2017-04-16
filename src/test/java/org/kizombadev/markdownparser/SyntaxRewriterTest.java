@@ -60,4 +60,14 @@ public class SyntaxRewriterTest {
         assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
         assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Bar");
     }
+
+    @Test
+    public void testRemoveBlanksAtTheEnd() {
+        Syntax syntax = underTest.rewrite(Syntax.createWithChildren(SyntaxType.ROOT,
+                Syntax.createWithChildren(SyntaxType.PARAGRAPH, Syntax.createTextSyntax("Foo"),
+                        Syntax.createTextSyntax(" "))));
+        assertThat(syntax).hasChildrenCount(1);
+        assertThat(syntax).hasChildrenChildrenCount(1);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+    }
 }

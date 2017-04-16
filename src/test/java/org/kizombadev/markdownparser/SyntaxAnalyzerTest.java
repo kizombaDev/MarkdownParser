@@ -125,7 +125,8 @@ public class SyntaxAnalyzerTest {
         assertThat(syntax).hasChildrenCount(1);
         assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
         assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
-        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Bar");
+        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndFourthText(SyntaxType.PARAGRAPH, "Bar");
     }
 
     @Test

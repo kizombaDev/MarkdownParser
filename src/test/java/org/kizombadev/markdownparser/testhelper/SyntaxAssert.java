@@ -70,6 +70,16 @@ public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
         return this;
     }
 
+    public SyntaxAssert hasChildrenChildrenCount(int count) {
+        isNotNull();
+
+        if (actual.getChildren().get(0).getChildren().size() != count) {
+            failWithMessage("Expected syntax has <%s> children but were <%s>", actual.getChildren().size(), count);
+        }
+
+        return this;
+    }
+
     public SyntaxAssert isRootAndFirstContainerAndFirstText(SyntaxType containerTypeOne, String text) {
         return doTwoPlains(containerTypeOne, text, 0, 0);
     }
@@ -80,6 +90,10 @@ public class SyntaxAssert extends AbstractAssert<SyntaxAssert, Syntax> {
 
     public SyntaxAssert isRootAndFirstContainerAndThirdText(SyntaxType containerTypeOne, String text) {
         return doTwoPlains(containerTypeOne, text, 0, 2);
+    }
+
+    public SyntaxAssert isRootAndFirstContainerAndFourthText(SyntaxType containerTypeOne, String text) {
+        return doTwoPlains(containerTypeOne, text, 0, 3);
     }
 
     public SyntaxAssert isRootAndSecondContainerAndFirstText(SyntaxType containerTypeOne, String text) {

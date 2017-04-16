@@ -20,6 +20,7 @@
 
 package org.kizombadev.markdownparser;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Syntax;
 import org.kizombadev.markdownparser.entities.SyntaxType;
@@ -34,8 +35,22 @@ public class SyntaxRewriter {
 
         rewriteParagraph(root);
         removeMultipleBlanks(root);
+        removeBlanksAtTheEnd(root);
 
         return root;
+    }
+
+    private void removeBlanksAtTheEnd(Syntax currentRoot) {
+        if (currentRoot.childrenCount() == 0) {
+            return;
+        }
+
+        Syntax lastChild = currentRoot.getChildAt(currentRoot.childrenCount() - 1);
+        if (SyntaxType.TEXT.equals(lastChild.getType()) && StringUtils.isBlank(lastChild.getContent())) {
+            currentRoot.removeChildAt(currentRoot.childrenCount() - 1);
+        }
+
+        currentRoot.getChildren().stream().forEach(this::removeBlanksAtTheEnd);
     }
 
     private void removeMultipleBlanks(Syntax currentRoot) {
