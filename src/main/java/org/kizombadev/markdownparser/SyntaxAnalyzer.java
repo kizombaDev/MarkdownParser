@@ -35,7 +35,6 @@ public class SyntaxAnalyzer {
     private static final int INFINITY_LOOP_DETECTION_COUNT = 10;
     private boolean isBoldModeActive = false;
     private boolean isItalicModeEnabled = false;
-    private boolean shouldInsertBlank = false;
     private int infinityLoopCounter = 0;
     private ItemStream<Token> tokenStream;
 
@@ -50,72 +49,63 @@ public class SyntaxAnalyzer {
 
         Syntax root = Syntax.create(SyntaxType.ROOT);
 
-        Token currentToken = current();
+        while (current() != null) {
 
-        while (currentToken != null) {
-
-            if (Token.NumberSign.equals(currentToken)) {
+            if (Token.NumberSign.equals(current())) {
                 handleBigHeadlineLine(root);
-            } else if (Token.DoubleNumberSign.equals(currentToken)) {
+            } else if (Token.DoubleNumberSign.equals(current())) {
                 handleSmallHeadlineLine(root);
-            } else if (Token.GreaterThanSign.equals(currentToken)) {
+            } else if (Token.GreaterThanSign.equals(current())) {
                 handleQuotation(root);
-            } else if (Token.Star.equals(currentToken) && Token.Blank.equals(next())) {
+            } else if (Token.Star.equals(current()) && Token.Blank.equals(next())) {
                 handleUnorderedList(root);
-            } else if (Token.NewLine.equals(currentToken)) {
+            } else if (Token.NewLine.equals(current()) && Token.NewLine.equals(next())) {
+                handleParagraphSeparator(root);
+            } else if (Token.NewLine.equals(current())) {
                 stepTokenForward();
-                shouldInsertBlank = false;
             } else {
                 handleParagraph(root);
             }
 
             checkInfinityLoop();
 
-            currentToken = current();
         }
 
-        //SyntaxRewriter.create().rewrite(root);
+        SyntaxRewriter.create().rewrite(root);
 
         return root;
+    }
+
+    private void handleParagraphSeparator(Syntax root) {
+        stepTokenForward();
+        stepTokenForward();
+        root.addChild(Syntax.create(SyntaxType.PARAGRAPH_SEPARATOR));
     }
 
     private void handleLine(Syntax currentRoot) {
         skipBlanks();
 
-        Token currentToken = current();
 
-        while (currentToken != null && !currentToken.equals(Token.NewLine)) {
+        while (current() != null && !Token.NewLine.equals(current())) {
 
-            if ((Token.DoubleStar.equals(currentToken) && isBoldModeActive) ||
-                    (Token.Star.equals(currentToken) && isItalicModeEnabled)) {
+            if ((Token.DoubleStar.equals(current()) && isBoldModeActive) ||
+                    (Token.Star.equals(current()) && isItalicModeEnabled)) {
                 return;
-            } else if (Token.DoubleStar.equals(currentToken)) {
-                handleBlank(currentRoot);
+            } else if (Token.DoubleStar.equals(current())) {
                 handleBold(currentRoot);
-            } else if (Token.Star.equals(currentToken)) {
-                handleBlank(currentRoot);
+            } else if (Token.Star.equals(current())) {
                 handleItalic(currentRoot);
-            } else if (currentToken.isTextToken()) {
-                handleBlank(currentRoot);
-                currentRoot.addChild(Syntax.createTextSyntax(currentToken.getTextValue()));
+            } else if (current() != null && current().isTextToken()) {
+                currentRoot.addChild(Syntax.createTextSyntax(current().getTextValue()));
                 stepTokenForward();
-            } else if (Token.Blank.equals(currentToken)) {
-                //currentRoot.addChild(Syntax.createTextSyntax(" "));
+            } else if (Token.Blank.equals(current())) {
+                currentRoot.addChild(Syntax.createTextSyntax(" "));
                 stepTokenForward();
-                shouldInsertBlank = true;
             }
 
             checkInfinityLoop();
 
-            currentToken = current();
         }
-    }
-
-    private void handleBlank(Syntax currentRoot) {
-        if (shouldInsertBlank) {
-            currentRoot.addChild(Syntax.createTextSyntax(" "));
-        }
-        shouldInsertBlank = false;
     }
 
     private void checkInfinityLoop() {
@@ -152,7 +142,6 @@ public class SyntaxAnalyzer {
 
             if (Token.NewLine.equals(current())) {
                 stepTokenForward();
-                shouldInsertBlank = false;
             }
         }
 

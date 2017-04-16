@@ -20,15 +20,74 @@
 
 package org.kizombadev.markdownparser;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.entities.Syntax;
+import org.kizombadev.markdownparser.entities.SyntaxType;
 
 public class SyntaxRewriter {
+    @NotNull
     public static SyntaxRewriter create() {
         return new SyntaxRewriter();
     }
 
-    public void rewrite(Syntax root) {
+    public Syntax rewrite(Syntax root) {
 
+        rewriteParagraph(root);
+        removeMultipleBlanks(root);
+        removeBlanksAtTheEnd(root);
+        removeParagraphSeparator(root);
 
+        return root;
+    }
+
+    private void removeParagraphSeparator(Syntax currentRoot) {
+        for (int i = 0; i < currentRoot.getChildrenCount(); i++) {
+            if (SyntaxType.PARAGRAPH_SEPARATOR.equals(currentRoot.getChildAt(i).getType())) {
+                currentRoot.removeChildAt(i);
+            }
+        }
+
+        currentRoot.getChildren().stream().forEach(this::removeParagraphSeparator);
+    }
+
+    private void removeBlanksAtTheEnd(Syntax currentRoot) {
+        if (currentRoot.getChildrenCount() == 0) {
+            return;
+        }
+
+        Syntax lastChild = currentRoot.getChildAt(currentRoot.getChildrenCount() - 1);
+        if (SyntaxType.TEXT.equals(lastChild.getType()) && StringUtils.isBlank(lastChild.getContent())) {
+            currentRoot.removeChildAt(currentRoot.getChildrenCount() - 1);
+        }
+
+        currentRoot.getChildren().stream().forEach(this::removeBlanksAtTheEnd);
+    }
+
+    private void removeMultipleBlanks(Syntax currentRoot) {
+        for (int i = 0; i < currentRoot.getChildrenCount() - 1; i++) {
+            if (" ".equals(currentRoot.getChildAt(i).getContent()) && " ".equals(currentRoot.getChildAt(i + 1).getContent())) {
+                currentRoot.removeChildAt(i + 1);
+            }
+        }
+
+        currentRoot.getChildren().stream().forEach(this::removeMultipleBlanks);
+    }
+
+    private void rewriteParagraph(Syntax root) {
+        for (int i = 0; i < root.getChildrenCount() - 1; i++) {
+            if (SyntaxType.PARAGRAPH.equals(root.getChildAt(i).getType()) && SyntaxType.PARAGRAPH.equals(root.getChildAt(i + 1).getType())) {
+
+                root.getChildAt(i).addChild(Syntax.createTextSyntax(" "));
+
+                for (Syntax child : root.getChildAt(i + 1).getChildren()) {
+                    root.getChildAt(i).addChild(child);
+                }
+
+                root.removeChildAt(i + 1);
+
+                rewriteParagraph(root);
+            }
+        }
     }
 }

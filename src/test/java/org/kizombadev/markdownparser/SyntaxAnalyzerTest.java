@@ -122,9 +122,11 @@ public class SyntaxAnalyzerTest {
     @Test
     public void testTextBlankBlankNewLineText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.Blank, Token.Blank, Token.NewLine, Token.createTextToken("Bar")));
-        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).hasChildrenCount(1);
         assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
-        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.PARAGRAPH, "Bar");
+        assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndFourthText(SyntaxType.PARAGRAPH, "Bar");
     }
 
     @Test
@@ -164,6 +166,14 @@ public class SyntaxAnalyzerTest {
     }
 
     @Test
+    public void testParagraphSeparator() {
+        Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.NewLine, Token.NewLine, Token.createTextToken("Bar")));
+        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
+        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.PARAGRAPH, "Bar");
+    }
+
+    @Test
     @Ignore
     public void testBoldAndItalicBug() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.DoubleStar, Token.Star, Token.createTextToken("Foo"), Token.DoubleStar, Token.Star));
@@ -182,6 +192,5 @@ public class SyntaxAnalyzerTest {
         assertThat(paragraph.getChildren().get(0).getChildren().get(0).getChildren().get(0)).isTextElementWith("Foo");
     }
 
-    //todo multi line
     //todo zweit zitate nacheinander
 }

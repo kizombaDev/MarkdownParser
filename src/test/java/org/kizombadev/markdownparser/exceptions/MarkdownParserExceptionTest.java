@@ -1,6 +1,6 @@
 /*
  * Marcel Swoboda
- * Copyright (C) 2017
+ * Copyright (C) 2017 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,25 @@
  *
  */
 
-package org.kizombadev.markdownparser.entities;
+package org.kizombadev.markdownparser.exceptions;
 
-public enum SyntaxType {
-    TEXT, ROOT, BIG_HEADLINE, BOLD, QUOTATION, SMALL_HEADLINE, UNORDERED_LIST, ITALIC, UNORDERED_LIST_ITEM, PARAGRAPH_SEPARATOR, PARAGRAPH
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class MarkdownParserExceptionTest {
+
+    @Test
+    public void testConstructorWithMessage() {
+        Exception e = new MarkdownParserException("Foo");
+        assertThat(e).hasMessage("Foo");
+    }
+
+    @Test
+    public void testConstructorWithMessageAndThrowable() {
+        Exception e = new MarkdownParserException("Foo", new IllegalStateException());
+        assertThat(e).hasMessage("Foo");
+        assertThat(e).hasCauseExactlyInstanceOf(IllegalStateException.class);
+
+    }
 }

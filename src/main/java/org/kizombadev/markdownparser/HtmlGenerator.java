@@ -73,7 +73,7 @@ public class HtmlGenerator {
             } else if (SyntaxType.PARAGRAPH.equals(child.getType())) {
                 handleTag("p", child, html);
             } else {
-                throw new UnknownSyntaxTypeException("The syntax type " + child.getType().toString() + "is unknown");
+                throw new UnknownSyntaxTypeException("The syntax type " + child.getType().toString() + " is unknown");
             }
         }
     }

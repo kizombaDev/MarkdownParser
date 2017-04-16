@@ -21,6 +21,7 @@
 package org.kizombadev.markdownparser;
 
 import org.apache.commons.cli.*;
+import org.jetbrains.annotations.NotNull;
 import org.kizombadev.markdownparser.exceptions.MarkdownParserException;
 
 import java.io.*;
@@ -36,6 +37,7 @@ public class Application {
         initCommandLineParser();
     }
 
+    @NotNull
     public static Application create() {
         return new Application();
     }

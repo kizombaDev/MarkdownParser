@@ -37,13 +37,13 @@ public class ApplicationTest {
     public void testWithOutArgs() {
         Application.create().execute(null);
 
-        String expectdConsoleOut = "Ups ... no valid options was found." + NEW_LINE + NEW_LINE +
+        String expectedConsoleOut = "Ups ... no valid options was found." + NEW_LINE + NEW_LINE +
                 "usage: MarkdownParser" + NEW_LINE +
                 " -h,--help           print this message" + NEW_LINE +
                 " -i,--input <arg>    the name of the input file (Markdown)" + NEW_LINE +
                 " -o,--output <arg>   the name of the output file (HTML)" + NEW_LINE;
 
-        assertThat(systemOutRule.getLog()).isEqualTo(expectdConsoleOut);
+        assertThat(systemOutRule.getLog()).isEqualTo(expectedConsoleOut);
     }
 
     @Test
@@ -51,12 +51,12 @@ public class ApplicationTest {
 
         Application.create().execute(new String[]{"-h"});
 
-        String expectdConsoleOut = "usage: MarkdownParser" + NEW_LINE +
+        String expectedConsoleOut = "usage: MarkdownParser" + NEW_LINE +
                 " -h,--help           print this message" + NEW_LINE +
                 " -i,--input <arg>    the name of the input file (Markdown)" + NEW_LINE +
                 " -o,--output <arg>   the name of the output file (HTML)" + NEW_LINE;
 
 
-        assertThat(systemOutRule.getLog()).isEqualTo(expectdConsoleOut);
+        assertThat(systemOutRule.getLog()).isEqualTo(expectedConsoleOut);
     }
 }

@@ -73,6 +73,18 @@ public class Syntax {
         children.add(syntax);
     }
 
+    public void removeChildAt(int index) {
+        children.remove(index);
+    }
+
+    public int getChildrenCount() {
+        return children.size();
+    }
+
+    public Syntax getChildAt(int index) {
+        return children.get(index);
+    }
+
     @Nullable
     public String getContent() {
         return content;
@@ -82,4 +94,6 @@ public class Syntax {
     public SyntaxType getType() {
         return type;
     }
+
+
 }

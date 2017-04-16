@@ -18,8 +18,16 @@
  *
  */
 
-package org.kizombadev.markdownparser.entities;
+package org.kizombadev.markdownparser.exceptions;
 
-public enum SyntaxType {
-    TEXT, ROOT, BIG_HEADLINE, BOLD, QUOTATION, SMALL_HEADLINE, UNORDERED_LIST, ITALIC, UNORDERED_LIST_ITEM, PARAGRAPH_SEPARATOR, PARAGRAPH
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class UnknownSyntaxTypeExceptionTest {
+    @Test
+    public void testConstructorWithMessage() {
+        Exception e = new UnknownSyntaxTypeException("Foo");
+        assertThat(e).hasMessage("Foo");
+    }
 }
