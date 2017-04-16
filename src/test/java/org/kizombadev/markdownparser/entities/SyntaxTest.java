@@ -46,4 +46,6 @@ public class SyntaxTest {
         assertThat(underTest.getChildren().get(0)).isSyntaxTypeOf(SyntaxType.ITALIC);
         assertThat(underTest.getChildren().get(1)).isSyntaxTypeOf(SyntaxType.TEXT);
     }
+
+    //todo add missing tests
 }

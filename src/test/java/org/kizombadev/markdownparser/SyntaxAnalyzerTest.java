@@ -122,9 +122,10 @@ public class SyntaxAnalyzerTest {
     @Test
     public void testTextBlankBlankNewLineText() {
         Syntax syntax = underTest.parse(ImmutableList.of(Token.createTextToken("Foo"), Token.Blank, Token.Blank, Token.NewLine, Token.createTextToken("Bar")));
-        assertThat(syntax).hasChildrenCount(2);
+        assertThat(syntax).hasChildrenCount(1);
         assertThat(syntax).isRootAndFirstContainerAndFirstText(SyntaxType.PARAGRAPH, "Foo");
-        assertThat(syntax).isRootAndSecondContainerAndFirstText(SyntaxType.PARAGRAPH, "Bar");
+        assertThat(syntax).isRootAndFirstContainerAndSecondText(SyntaxType.PARAGRAPH, " ");
+        assertThat(syntax).isRootAndFirstContainerAndThirdText(SyntaxType.PARAGRAPH, "Bar");
     }
 
     @Test

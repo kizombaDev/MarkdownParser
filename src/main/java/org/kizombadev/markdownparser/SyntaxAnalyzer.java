@@ -74,7 +74,7 @@ public class SyntaxAnalyzer {
             currentToken = current();
         }
 
-        //SyntaxRewriter.create().rewrite(root);
+        SyntaxRewriter.create().rewrite(root);
 
         return root;
     }
